@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lms.lmsfinal.AdminBooksContentController"
+      spacing="12"
+      style="-fx-background-color:#111827; -fx-background-radius:12;">
+    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+    <!-- Search -->
+    <HBox spacing="8">
+        <TextField fx:id="searchField" promptText="Search title / author / ISBN" HBox.hgrow="ALWAYS"/>
+        <Button text="Search" onAction="#onSearch" />
+        <Button text="Reset" onAction="#onReset" />
+    </HBox>
+
+    <!-- Table -->
+    <TableView fx:id="table" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="cIsbn" text="ISBN" prefWidth="140"/>
+            <TableColumn fx:id="cTitle" text="Title" prefWidth="280"/>
+            <TableColumn fx:id="cAuthor" text="Author" prefWidth="220"/>
+            <TableColumn fx:id="cPublisher" text="Publisher" prefWidth="180"/>
+            <TableColumn fx:id="cTotal" text="Total" prefWidth="90"/>
+            <TableColumn fx:id="cAvail" text="Available" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <!-- Editor -->
+    <HBox spacing="8">
+        <TextField fx:id="fIsbn" promptText="ISBN" prefWidth="150"/>
+        <TextField fx:id="fTitle" promptText="Title" prefWidth="220"/>
+        <TextField fx:id="fAuthor" promptText="Author" prefWidth="180"/>
+        <TextField fx:id="fPublisher" promptText="Publisher" prefWidth="180"/>
+        <TextField fx:id="fTotal" promptText="Total" prefWidth="80"/>
+        <TextField fx:id="fAvail" promptText="Available" prefWidth="90"/>
+        <Button text="Add" onAction="#onAdd"/>
+        <Button text="Update" onAction="#onUpdate"/>
+        <Button text="Delete" onAction="#onDelete"/>
+    </HBox>
+
+    <Label fx:id="status" style="-fx-text-fill:#93c5fd;"/>
+</VBox>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.lms.lmsfinal.UserDashboardController"
+            prefWidth="1200.0" prefHeight="760.0"
+            styleClass="scene-root theme-dark">
+
+    <top>
+        <HBox spacing="12" styleClass="topbar">
+            <padding><Insets top="16" right="24" bottom="16" left="24"/></padding>
+            <Text text="Library" styleClass="title-lg"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Label fx:id="userLabel" textFill="white"/>
+            <Button text="Logout" onAction="#onLogout" styleClass="btn-pill"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="12">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+            <HBox spacing="8">
+                <TextField fx:id="searchField" promptText="Search title / author / ISBN" HBox.hgrow="ALWAYS"/>
+                <Button text="Search" onAction="#onSearch" styleClass="btn-chip"/>
+                <Button text="Reset" onAction="#onReset" styleClass="btn-chip"/>
+            </HBox>
+
+            <TableView fx:id="booksTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colTitle" text="Title" prefWidth="260"/>
+                    <TableColumn fx:id="colAuthor" text="Author" prefWidth="200"/>
+                    <TableColumn fx:id="colIsbn" text="ISBN" prefWidth="140"/>
+                    <TableColumn fx:id="colAvail" text="Available" prefWidth="100"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="8">
+                <Label text="Loan days:" textFill="white"/>
+                <TextField fx:id="loanDaysField" promptText="14" prefWidth="60"/>
+                <Button text="Borrow Selected" onAction="#onBorrow" styleClass="btn-primary"/>
+            </HBox>
+
+            <Label fx:id="statusLabel" textFill="white"/>
+        </VBox>
+    </center>
+</BorderPane>

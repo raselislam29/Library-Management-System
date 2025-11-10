@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.lms.lmsfinal.LoginController"
+            prefWidth="1100.0" prefHeight="720.0"
+            styleClass="login-scene">
+
+    <!-- top bar -->
+    <top>
+        <HBox spacing="16" styleClass="login-topbar">
+            <padding>
+                <Insets top="14" right="24" bottom="14" left="24"/>
+            </padding>
+
+            <!-- brand -->
+            <HBox spacing="6" alignment="CENTER_LEFT">
+                <Text text="Farmingdale" styleClass="brand-left"/>
+                <Text text="State College Library" styleClass="brand-right"/>
+            </HBox>
+
+            <Pane HBox.hgrow="ALWAYS"/>
+
+            <!-- sign up shortcut -->
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Label text="Don't have an account?" styleClass="muted"/>
+                <Button text="Sign Up" onAction="#toggleMode" styleClass="btn-pill"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- center card -->
+    <center>
+        <StackPane>
+            <padding>
+                <Insets top="28" right="28" bottom="28" left="28"/>
+            </padding>
+
+            <BorderPane maxWidth="980"
+                        styleClass="login-card"
+                        prefHeight="560">
+
+                <!-- left form -->
+                <left>
+                    <VBox spacing="18" styleClass="login-form">
+                        <padding>
+                            <Insets top="40" right="36" bottom="40" left="36"/>
+                        </padding>
+
+                        <Label text="Log in" styleClass="login-title"/>
+
+                        <VBox spacing="10">
+                            <Label text="Username or Email" styleClass="label"/>
+                            <TextField fx:id="emailField" promptText="Enter your username or email address" styleClass="input"/>
+                            <Label text="Password" styleClass="label"/>
+                            <PasswordField fx:id="passwordField" promptText="Enter your password" onAction="#onLogin" styleClass="input"/>
+                        </VBox>
+
+                        <Button fx:id="loginButton" text="Log In" onAction="#onLogin" styleClass="btn-primary" maxWidth="Infinity"/>
+
+                        <Hyperlink text="Forgot Password?" styleClass="link-muted" onAction="#onLogin"/>
+
+                        <Label fx:id="errorLabel" styleClass="error" wrapText="true"/>
+
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Log in with" styleClass="muted"/>
+                            <Button text="G" styleClass="btn-social"/>
+                            <Button text="f" styleClass="btn-social"/>
+                            <Button text="◎" styleClass="btn-social"/>
+                            <Button text="in" styleClass="btn-social"/>
+                        </HBox>
+
+                        <!-- hidden Register button for toggleMode() -->
+                        <Button fx:id="registerButton" text="Register" onAction="#onRegister"
+                                managed="false" visible="false" styleClass="btn-primary"/>
+                    </VBox>
+                </left>
+
+                <!-- right illustration pane -->
+                <center>
+                    <StackPane styleClass="illust-pane">
+                        <ImageView preserveRatio="true" fitWidth="450">
+                            <image>
+                                <!-- Put your image here -->
+                                <Image url="@images/login_illustration.jpg"/>
+                            </image>
+                        </ImageView>
+                    </StackPane>
+                </center>
+
+            </BorderPane>
+        </StackPane>
+    </center>
+
+</BorderPane>

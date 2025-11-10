@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane prefHeight="700.0" prefWidth="1000.0"
+            style="-fx-background-color: #111827;"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.lms.lmsfinal.DashboardController">
+
+    <left>
+        <VBox alignment="TOP_CENTER" prefWidth="80.0" spacing="30.0"
+              style="-fx-background-color: #000000; -fx-border-color: #1F2937; -fx-border-width: 0 1 0 0;">
+            <padding>
+                <Insets top="30.0" right="0.0" bottom="0.0" left="0.0"/>
+            </padding>
+
+            <VBox alignment="CENTER" spacing="20.0">
+                <Text fill="WHITE" text="LMS">
+                    <font><Font name="System Bold" size="18.0"/></font>
+                </Text>
+                <VBox alignment="CENTER" spacing="15.0">
+                    <Label text="Home" textFill="#9ca3af"/>
+                    <Label text="Catalog" textFill="#06b6d4"/>
+                    <Label text="Activity" textFill="#9ca3af"/>
+                </VBox>
+            </VBox>
+
+            <Button onAction="#onSignOutClick" prefWidth="60.0"
+                    style="-fx-background-color: #EF4444; -fx-background-radius: 5;"
+                    text="Logout" textFill="WHITE" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox alignment="TOP_LEFT" spacing="20.0">
+            <padding>
+                <Insets top="30.0" right="30.0" bottom="30.0" left="30.0"/>
+            </padding>
+
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <Label fx:id="welcomeUserLabel" text="Welcome," textFill="WHITE">
+                    <font><Font size="24.0"/></font>
+                </Label>
+                <Label fx:id="userEmailLabel" text="User" textFill="#06b6d4">
+                    <font><Font name="System Bold" size="24.0"/></font>
+                </Label>
+                <Label text="•" textFill="#9ca3af" style="-fx-padding: 0 0 0 10;"/>
+                <Label fx:id="userRoleLabel" text="ROLE" textFill="#9ca3af">
+                    <font><Font size="14.0"/></font>
+                </Label>
+            </HBox>
+
+            <!-- Admin Controls (visible only for LIBRARIAN/ADMIN) -->
+            <HBox fx:id="adminControlsBox" spacing="10.0"
+                  style="-fx-background-color: #1F2937; -fx-background-radius: 10;">
+                <padding>
+                    <Insets top="12.0" right="12.0" bottom="12.0" left="12.0"/>
+                </padding>
+                <Button text="Manage Users" onAction="#onManageUsersClick"
+                        style="-fx-background-color: #2563EB; -fx-background-radius: 6; -fx-text-fill: white;"/>
+                <Button text="Manage Books" onAction="#onManageBooksClick"
+                        style="-fx-background-color: #10B981; -fx-background-radius: 6; -fx-text-fill: white;"/>
+            </HBox>
+
+            <!-- Recently Borrowed Books -->
+            <VBox style="-fx-background-color: #1F2937; -fx-background-radius: 10;" prefHeight="250.0">
+                <padding>
+                    <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
+                </padding>
+                <Label text="Recently Borrowed Books" textFill="WHITE">
+                    <font><Font name="System Bold" size="18.0"/></font>
+                </Label>
+                <TableView fx:id="borrowedBooksTable" VBox.vgrow="ALWAYS"
+                           style="-fx-background-color: #1F2937; -fx-table-cell-border-color: #374151;">
+                    <columns>
+                        <TableColumn fx:id="borrowedTitleColumn" prefWidth="250.0" text="Title"/>
+                        <TableColumn fx:id="borrowedAuthorColumn" prefWidth="200.0" text="Author"/>
+                        <TableColumn fx:id="borrowedDueDateColumn" prefWidth="150.0" text="Due Date"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+                <HBox spacing="10.0" alignment="CENTER_LEFT" style="-fx-padding: 10 0 0 0;">
+                    <Button fx:id="returnBtn" text="Return Selected" onAction="#onReturnSelected"
+                            style="-fx-background-color: #ef4444; -fx-background-radius: 6; -fx-text-fill: white;"/>
+                </HBox>
+            </VBox>
+
+            <!-- Catalog Preview -->
+            <VBox style="-fx-background-color: #1F2937; -fx-background-radius: 10;">
+                <padding>
+                    <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
+                </padding>
+                <Label text="Library Catalog Preview" textFill="WHITE">
+                    <font><Font name="System Bold" size="18.0"/></font>
+                </Label>
+                <TableView fx:id="catalogPreviewTable" VBox.vgrow="ALWAYS"
+                           style="-fx-background-color: #1F2937; -fx-table-cell-border-color: #374151;">
+                    <columns>
+                        <TableColumn fx:id="catalogTitleColumn" prefWidth="250.0" text="Title"/>
+                        <TableColumn fx:id="catalogAuthorColumn" prefWidth="200.0" text="Author"/>
+                        <TableColumn fx:id="catalogIsbnColumn" prefWidth="160.0" text="ISBN"/>
+                        <TableColumn fx:id="catalogAvailableColumn" prefWidth="140.0" text="Available Copies"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+
+                <HBox spacing="10.0" alignment="CENTER_LEFT" style="-fx-padding: 10 0 0 0;">
+                    <Label text="Loan days:" textFill="#9ca3af"/>
+                    <TextField fx:id="loanDaysField" promptText="14" prefWidth="60"
+                               style="-fx-background-radius: 6; -fx-background-color: #0f172a; -fx-text-fill: white; -fx-border-color: #374151; -fx-border-radius: 6;"/>
+                    <Button fx:id="borrowBtn" text="Borrow Selected" onAction="#onBorrowSelected"
+                            style="-fx-background-color: #2563EB; -fx-background-radius: 6; -fx-text-fill: white;"/>
+                    <Label fx:id="statusLabel" textFill="#9ca3af"/>
+                </HBox>
+            </VBox>
+
+        </VBox>
+    </center>
+</BorderPane>

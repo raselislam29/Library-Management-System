@@ -1,0 +1,55 @@
+package com.lms.lmsfinal;
+
+import com.lms.lmsfinal.FirebaseService.UserSummary;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+
+public class AdminUsersContentController {
+
+    @FXML private TableView<UserSummary> usersTable;
+    @FXML private TableColumn<UserSummary, String> colEmail;
+    @FXML private TableColumn<UserSummary, String> colRole;
+
+    @FXML private TextField tfEmail;
+    @FXML private ChoiceBox<String> cbRole;
+    @FXML private Label statusLabel;
+
+    private final FirebaseService firebase = new FirebaseService();
+    private final ObservableList<UserSummary> users = FXCollections.observableArrayList();
+
+    @FXML
+    private void initialize() {
+        colEmail.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("email"));
+        colRole.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("role"));
+        usersTable.setItems(users);
+        cbRole.setItems(FXCollections.observableArrayList("MEMBER", "LIBRARIAN", "ADMIN"));
+        refresh();
+
+        usersTable.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> {
+            if (n != null) {
+                tfEmail.setText(n.getEmail());
+                cbRole.setValue(n.getRole());
+            }
+        });
+    }
+
+    @FXML private void onSetRole() {
+        try {
+            String email = tfEmail.getText() == null ? "" : tfEmail.getText().trim();
+            String role = (cbRole.getValue() == null) ? "" : cbRole.getValue();
+            if (email.isBlank() || role.isBlank()) { status("Select a user and role."); return; }
+            firebase.setUserRoleByEmail(email, role);
+            status("Updated: " + email + " → " + role);
+            refresh();
+        } catch (Exception e) {
+            status("Error: " + e.getMessage());
+        }
+    }
+
+    @FXML private void onRefresh() { refresh(); }
+
+    private void refresh() { users.setAll(firebase.getAllUsers()); }
+    private void status(String s) { if (statusLabel != null) statusLabel.setText(s); }
+}

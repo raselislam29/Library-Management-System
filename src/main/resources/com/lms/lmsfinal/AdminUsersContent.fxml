@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lms.lmsfinal.AdminUsersContentController"
+      spacing="12"
+      style="-fx-background-color:#111827; -fx-background-radius:12;">
+    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+    <TableView fx:id="usersTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colEmail" text="Email" prefWidth="380"/>
+            <TableColumn fx:id="colRole" text="Role" prefWidth="140"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="8">
+        <TextField fx:id="tfEmail" promptText="Selected user's email" prefWidth="320"/>
+        <ChoiceBox fx:id="cbRole" prefWidth="160"/>
+        <Button text="Set Role" onAction="#onSetRole"/>
+        <Button text="Refresh" onAction="#onRefresh"/>
+    </HBox>
+
+    <Label fx:id="statusLabel" style="-fx-text-fill:#93c5fd;"/>
+</VBox>

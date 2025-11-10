@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.lms.lmsfinal.AdminBooksController"
+            prefWidth="1000.0" prefHeight="700.0"
+            styleClass="root-dark">
+
+    <top>
+        <HBox spacing="10" styleClass="header">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+            <Label text="Manage Books" styleClass="title"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Button text="Back" onAction="#onBack" styleClass="btn-danger"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="12" styleClass="card">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+            <TableView fx:id="booksTable">
+                <columns>
+                    <TableColumn fx:id="colTitle" text="Title" prefWidth="260"/>
+                    <TableColumn fx:id="colAuthor" text="Author" prefWidth="180"/>
+                    <TableColumn fx:id="colIsbn" text="ISBN" prefWidth="160"/>
+                    <TableColumn fx:id="colAvail" text="Available" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <VBox spacing="10" styleClass="card">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="16"/>
+                    <ColumnConstraints percentWidth="34"/>
+                    <ColumnConstraints percentWidth="16"/>
+                    <ColumnConstraints percentWidth="34"/>
+                </columnConstraints>
+
+                <Label text="ISBN"/>
+                <TextField fx:id="tfIsbn" GridPane.columnIndex="1"/>
+
+                <Label text="Title" GridPane.rowIndex="1"/>
+                <TextField fx:id="tfTitle" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Author" GridPane.rowIndex="2"/>
+                <TextField fx:id="tfAuthor" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Publisher" GridPane.columnIndex="2"/>
+                <TextField fx:id="tfPublisher" GridPane.columnIndex="3"/>
+
+                <Label text="Total" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <TextField fx:id="tfTotal" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                <Label text="Available" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                <TextField fx:id="tfAvailable" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+            </GridPane>
+
+            <HBox spacing="10">
+                <Button text="Add" onAction="#onAdd" styleClass="btn-primary"/>
+                <Button text="Update" onAction="#onUpdate" styleClass="btn-success"/>
+                <Button text="Delete" onAction="#onDelete" styleClass="btn-danger"/>
+                <Button text="Refresh" onAction="#onRefresh" styleClass="btn-secondary"/>
+                <Label fx:id="statusLabel" textFill="#9ca3af"/>
+            </HBox>
+        </VBox>
+    </bottom>
+</BorderPane>
