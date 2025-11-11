@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lms.lmsfinal.UserBorrowsContentController"
+      spacing="12" styleClass="surface">
+
+    <TabPane fx:id="tabs" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <tabs>
+            <Tab text="Borrowed Books">
+                <content>
+                    <VBox spacing="8">
+                        <TextField fx:id="searchBorrowed" promptText="Search by title / ISBN" />
+                        <TableView fx:id="borrowedTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="bIsbn" text="ISBN" prefWidth="140"/>
+                                <TableColumn fx:id="bTitle" text="Title" prefWidth="320"/>
+                                <TableColumn fx:id="bDue"   text="Due Date" prefWidth="140"/>
+                                <TableColumn fx:id="bAt"    text="Date & Time" prefWidth="200"/>
+                                <TableColumn fx:id="bAction" text="Action" prefWidth="120"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </content>
+            </Tab>
+            <Tab text="Returned Books">
+                <content>
+                    <VBox spacing="8">
+                        <TextField fx:id="searchReturned" promptText="Search by title / ISBN" />
+                        <TableView fx:id="returnedTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="rIsbn" text="ISBN" prefWidth="140"/>
+                                <TableColumn fx:id="rTitle" text="Title" prefWidth="320"/>
+                                <TableColumn fx:id="rDue"   text="Due Date" prefWidth="140"/>
+                                <TableColumn fx:id="rAt"    text="Returned At" prefWidth="200"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </content>
+            </Tab>
+        </tabs>
+    </TabPane>
+</VBox>

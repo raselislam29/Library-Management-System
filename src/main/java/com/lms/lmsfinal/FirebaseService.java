@@ -538,4 +538,30 @@ public class FirebaseService {
         }).get();
 
     }
+    public java.util.List<UserBorrow> getBorrowsForUser(String email, Boolean returnedFilter) {
+        java.util.List<UserBorrow> out = new java.util.ArrayList<>();
+        try {
+            Query q = db.collection("borrows").whereEqualTo("user_email", email);
+            if (returnedFilter != null) q = q.whereEqualTo("returned", returnedFilter);
+            q = q.orderBy("due_date", Query.Direction.DESCENDING);
+
+            java.util.List<QueryDocumentSnapshot> docs = q.get().get().getDocuments();
+            for (var d : docs) {
+                String id = d.getId();
+                String isbn = d.getString("isbn");
+                String title = d.getString("title");
+                com.google.cloud.Timestamp bts = d.getTimestamp("borrowed_at");
+                com.google.cloud.Timestamp dts = d.getTimestamp("due_date");
+                com.google.cloud.Timestamp rts = d.getTimestamp("returned_at");
+                boolean ret = Boolean.TRUE.equals(d.getBoolean("returned"));
+
+                String borrowedAt = bts == null ? "" : bts.toDate().toString();
+                String dueDate    = dts == null ? "" : dts.toDate().toString();
+                String returnedAt = rts == null ? "" : rts.toDate().toString();
+
+                out.add(new UserBorrow(id, isbn, title, borrowedAt, dueDate, returnedAt, ret));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return out;
+    }
 }

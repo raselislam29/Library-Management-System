@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lms.lmsfinal.UserHomeContentController"
+      spacing="16">
+    <padding><Insets top="4" right="4" bottom="4" left="4"/></padding>
+
+    <VBox spacing="16" VBox.vgrow="ALWAYS">
+        <HBox spacing="16">
+            <VBox spacing="6" styleClass="surface" prefWidth="280">
+                <Label text="Your Borrowed Book List" styleClass="h1"/>
+                <Label fx:id="borrowedCount" styleClass="subtle"/>
+            </VBox>
+            <VBox spacing="6" styleClass="surface" prefWidth="280">
+                <Label text="Your Returned Book List" styleClass="h1"/>
+                <Label fx:id="returnedCount" styleClass="subtle"/>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="10" styleClass="surface">
+            <Label text="“Embarking on the journey of reading fosters personal growth…”" styleClass="subtle"/>
+            <Label text="~ BookWorm Team" styleClass="subtle"/>
+        </VBox>
+    </VBox>
+
+    <VBox spacing="16" HBox.hgrow="ALWAYS">
+        <PieChart fx:id="pie" prefHeight="380" VBox.vgrow="NEVER"/>
+        <VBox spacing="6" styleClass="surface">
+            <Label text="Legend" styleClass="h1"/>
+            <Label text="Total Borrowed Books" styleClass="subtle"/>
+            <Label text="Total Returned Books" styleClass="subtle"/>
+        </VBox>
+    </VBox>
+</HBox>

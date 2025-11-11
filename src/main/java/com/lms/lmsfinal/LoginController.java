@@ -65,7 +65,8 @@ public class LoginController {
                     if (role.equalsIgnoreCase("ADMIN") || role.equalsIgnoreCase("LIBRARIAN")) {
                         LibraryApp.setScene("/com/lms/lmsfinal/AdminShellView.fxml", "Admin", 1200, 760);
                     } else {
-                        LibraryApp.setScene("/com/lms/lmsfinal/UserDashboardView.fxml", "User Dashboard", 1200, 760);
+                        LibraryApp.setScene("/com/lms/lmsfinal/UserShellView.fxml", "User", 1200, 760);
+
                     }
                 });
                 return null;

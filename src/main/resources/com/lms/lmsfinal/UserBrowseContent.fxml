@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lms.lmsfinal.UserBrowseContentController"
+      spacing="12" styleClass="surface">
+
+    <HBox spacing="8">
+        <TextField fx:id="searchField" promptText="Search by title / author / ISBN" HBox.hgrow="ALWAYS"/>
+        <Button text="Search" onAction="#onSearch" styleClass="button primary"/>
+        <Button text="Reset"  onAction="#onReset"  styleClass="button ghost"/>
+    </HBox>
+
+    <TableView fx:id="table" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="cTitle" text="Title" prefWidth="320"/>
+            <TableColumn fx:id="cAuthor" text="Author" prefWidth="180"/>
+            <TableColumn fx:id="cIsbn" text="ISBN" prefWidth="160"/>
+            <TableColumn fx:id="cAvail" text="Available" prefWidth="120"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="8">
+        <TextField fx:id="nameField" promptText="Your name" prefWidth="200"/>
+        <TextField fx:id="studentIdField" promptText="Student ID" prefWidth="140"/>
+        <TextField fx:id="phoneField" promptText="Phone" prefWidth="140"/>
+        <TextField fx:id="studentEmailField" promptText="Student Email" prefWidth="220"/>
+        <TextField fx:id="daysField" promptText="Days" prefWidth="80" text="14"/>
+        <Button text="Borrow Selected" onAction="#onBorrow" styleClass="button success"/>
+    </HBox>
+
+    <Label fx:id="status" style="-fx-text-fill:#93c5fd;"/>
+</VBox>

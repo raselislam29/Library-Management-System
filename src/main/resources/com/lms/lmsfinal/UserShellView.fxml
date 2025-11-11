@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Tooltip?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.lms.lmsfinal.UserShellController"
+            prefWidth="1200.0" prefHeight="760.0"
+            style="-fx-background-color:#0f172a;">
+
+    <!-- Top bar -->
+    <top>
+        <HBox spacing="12" styleClass="bar">
+            <padding><Insets top="10" right="18" bottom="10" left="18"/></padding>
+            <Text text="User" style="-fx-fill:white; -fx-font-weight:bold; -fx-font-size:18;"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Label fx:id="clockLabel" style="-fx-text-fill:#ffffff;"/>
+            <Separator orientation="VERTICAL"/>
+            <Label fx:id="welcomeLabel" style="-fx-text-fill:#ffffff; -fx-font-weight:bold;"/>
+            <Button text="Settings" styleClass="button ghost"/>
+            <Button text="Logout" onAction="#onLogout" styleClass="button danger"/>
+        </HBox>
+    </top>
+
+    <!-- Left navigation -->
+    <left>
+        <VBox spacing="10" style="-fx-background-color:#0b1220;" prefWidth="72">
+            <padding><Insets top="16" bottom="16" left="12" right="12"/></padding>
+
+            <Button text="🏠" onAction="#showHome"    maxWidth="Infinity" styleClass="button nav">
+                <tooltip><Tooltip text="Home"/></tooltip>
+            </Button>
+
+            <Button text="📚" onAction="#showBrowse"  maxWidth="Infinity" styleClass="button nav">
+                <tooltip><Tooltip text="Browse Catalog"/></tooltip>
+            </Button>
+
+            <Button text="📝" onAction="#showBorrows" maxWidth="Infinity" styleClass="button nav">
+                <tooltip><Tooltip text="My Borrows"/></tooltip>
+            </Button>
+        </VBox>
+    </left>
+
+    <!-- Center area -->
+    <center>
+        <StackPane fx:id="contentHost" style="-fx-background-color:#111827; -fx-background-radius:12;">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+        </StackPane>
+    </center>
+</BorderPane>
