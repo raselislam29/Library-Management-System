@@ -24,7 +24,7 @@
 
         <VBox spacing="10" styleClass="surface">
             <Label text="“Embarking on the journey of reading fosters personal growth…”" styleClass="subtle"/>
-            <Label text="~ BookWorm Team" styleClass="subtle"/>
+            <Label text="~ Library Management Team" styleClass="subtle"/>
         </VBox>
     </VBox>
 

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.lms.lmsfinal.RegisterController"
+            fx:id="root"
+            prefWidth="1000.0" prefHeight="700.0"
+            style="-fx-background-color: linear-gradient(to bottom, #0b1220, #111827);">
+
+    <center>
+        <VBox alignment="CENTER" spacing="18.0" maxWidth="420">
+            <padding><Insets top="40" bottom="40" left="40" right="40"/></padding>
+
+            <!-- Logo -->
+            <ImageView fitWidth="110" preserveRatio="true">
+                <image>
+                    <Image url="@images/library_logo.png"/>
+                </image>
+            </ImageView>
+
+            <!-- Title -->
+            <Label text="Create Account" textFill="WHITE">
+                <font><Font name="System Bold" size="26"/></font>
+            </Label>
+
+            <VBox spacing="10">
+                <Label text="Email" textFill="#9ca3af" />
+                <TextField fx:id="emailField"
+                           promptText="you@school.edu"
+                           style="-fx-background-radius: 8; -fx-background-color: #1F2937; -fx-text-fill: white; -fx-prompt-text-fill: #6b7280;"/>
+
+                <Label text="Password" textFill="#9ca3af" />
+                <PasswordField fx:id="passwordField"
+                               promptText="Create a strong password"
+                               onAction="#onRegister"
+                               style="-fx-background-radius: 8; -fx-background-color: #1F2937; -fx-text-fill: white; -fx-prompt-text-fill: #6b7280;"/>
+
+                <Label text="Confirm Password" textFill="#9ca3af" />
+                <PasswordField fx:id="confirmField"
+                               promptText="Re-enter password"
+                               onAction="#onRegister"
+                               style="-fx-background-radius: 8; -fx-background-color: #1F2937; -fx-text-fill: white; -fx-prompt-text-fill: #6b7280;"/>
+            </VBox>
+
+            <Button fx:id="registerBtn"
+                    text="Register"
+                    onAction="#onRegister"
+                    maxWidth="Infinity"
+                    style="-fx-background-color: #10B981; -fx-text-fill:white; -fx-background-radius:8; -fx-padding:8 22 8 22;"/>
+
+            <Label fx:id="errorLabel"
+                   textFill="#ef4444"
+                   wrapText="true"/>
+
+            <Hyperlink text="Already have an account? Login"
+                       onAction="#goLogin"
+                       textFill="#06b6d4"/>
+        </VBox>
+    </center>
+
+</BorderPane>
