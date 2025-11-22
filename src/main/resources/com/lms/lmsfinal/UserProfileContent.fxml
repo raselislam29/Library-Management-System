@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lms.lmsfinal.UserProfileContentController"
+      spacing="14"
+      styleClass="surface">
+
+    <padding>
+        <Insets top="16" right="16" bottom="16" left="16"/>
+    </padding>
+
+    <!-- Header -->
+    <HBox spacing="8">
+        <Text text="Profile &amp; Settings"
+              style="-fx-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
+    </HBox>
+
+    <Separator/>
+
+    <!-- Read-only info -->
+    <GridPane hgap="12" vgap="8">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="25"/>
+            <ColumnConstraints percentWidth="75"/>
+        </columnConstraints>
+
+        <Label text="Email"/>
+        <Label fx:id="lblEmail" GridPane.columnIndex="1" style="-fx-text-fill:#e5e7eb;"/>
+
+        <Label text="Role" GridPane.rowIndex="1"/>
+        <Label fx:id="lblRole" GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-text-fill:#e5e7eb;"/>
+
+        <Label text="Registered" GridPane.rowIndex="2"/>
+        <Label fx:id="lblJoined" GridPane.columnIndex="1" GridPane.rowIndex="2" style="-fx-text-fill:#9ca3af;"/>
+    </GridPane>
+
+    <Separator/>
+
+    <!-- Editable profile fields -->
+    <VBox spacing="8">
+        <Label text="Name" style="-fx-text-fill:#e5e7eb; -fx-font-weight:bold;"/>
+
+        <GridPane hgap="12" vgap="8">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="75"/>
+            </columnConstraints>
+
+            <Label text="First name"/>
+            <TextField fx:id="firstNameField" GridPane.columnIndex="1"/>
+
+            <Label text="Last name" GridPane.rowIndex="1"/>
+            <TextField fx:id="lastNameField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <Label text="Display name" GridPane.rowIndex="2"/>
+            <TextField fx:id="displayNameField" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                       promptText="Shown in welcome message"/>
+        </GridPane>
+
+        <HBox spacing="8">
+            <Button text="Save changes"
+                    onAction="#onSaveProfile"
+                    style="-fx-background-color:#3b82f6; -fx-text-fill:white; -fx-background-radius:6;"/>
+
+            <Button text="Reset"
+                    onAction="#onResetProfile"
+                    style="-fx-background-color:transparent; -fx-border-color:#4b5563; -fx-text-fill:#e5e7eb; -fx-background-radius:6; -fx-border-radius:6;"/>
+        </HBox>
+    </VBox>
+
+    <Separator/>
+
+    <!-- Password section -->
+    <VBox spacing="6">
+        <Label text="Password" style="-fx-text-fill:#e5e7eb; -fx-font-weight:bold;"/>
+        <Label text="You can request a password reset link. It will be sent to your registered email."
+               wrapText="true"
+               style="-fx-text-fill:#9ca3af; -fx-font-size:11;"/>
+
+        <Button text="Send password reset email"
+                onAction="#onChangePassword"
+                style="-fx-background-color:#f97316; -fx-text-fill:white; -fx-background-radius:6;"/>
+    </VBox>
+
+    <!-- Status message -->
+    <Label fx:id="statusLabel"
+           style="-fx-text-fill:#a5b4fc; -fx-font-size:11;"
+           wrapText="true"/>
+</VBox>

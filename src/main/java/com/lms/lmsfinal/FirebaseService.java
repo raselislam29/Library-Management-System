@@ -195,7 +195,7 @@ public class FirebaseService {
     }
 
     // =====================================================================
-    // USERS (Firestore)
+    // USERS (Firestore + Profile)
     // =====================================================================
 
     private void createUserRole(String uid, String email, String role) throws Exception {
@@ -206,6 +206,7 @@ public class FirebaseService {
             data.put("email", email);
             data.put("user_role", role);
             data.put("join_date", Timestamp.now());
+            // profile fields can be added later
             ref.set(data).get();
         }
     }
@@ -273,6 +274,126 @@ public class FirebaseService {
         }
         return out;
     }
+
+    // ---------- NEW: User Profile helpers ----------
+
+    /**
+     * Profile DTO for user settings screen.
+     */
+    public static class UserProfile {
+        private final String email;
+        private final String role;
+        private final String firstName;
+        private final String lastName;
+        private final String displayName;
+        private final Date   joinDate;
+
+        public UserProfile(String email, String role,
+                           String firstName, String lastName,
+                           String displayName, Date joinDate) {
+            this.email = email;
+            this.role = role;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.displayName = displayName;
+            this.joinDate = joinDate;
+        }
+
+        public String getEmail()       { return email; }
+        public String getRole()        { return role; }
+        public String getFirstName()   { return firstName; }
+        public String getLastName()    { return lastName; }
+        public String getDisplayName() { return displayName; }
+        public Date   getJoinDate()    { return joinDate; }
+    }
+
+    /**
+     * Load full profile (email, role, first/last name, display name, join date).
+     */
+    public UserProfile getUserProfile(String email) {
+        if (email == null || email.isBlank()) return null;
+
+        try {
+            UserRecord rec = FirebaseAuth.getInstance().getUserByEmail(email);
+            if (rec == null) return null;
+
+            String uid = rec.getUid();
+            DocumentSnapshot doc = db.collection("users").document(uid).get().get();
+
+            String role        = "MEMBER";
+            String firstName   = null;
+            String lastName    = null;
+            String displayName = null;
+            Timestamp joinTs   = null;
+
+            if (doc.exists()) {
+                String r = doc.getString("user_role");
+                if (r != null && !r.isBlank()) role = r;
+
+                firstName   = doc.getString("first_name");
+                lastName    = doc.getString("last_name");
+                displayName = doc.getString("display_name");
+                joinTs      = doc.getTimestamp("join_date");
+            }
+
+            // If no displayName in Firestore, try Firebase Auth display name
+            if (displayName == null || displayName.isBlank()) {
+                displayName = rec.getDisplayName();
+            }
+
+            // Determine join date from Firestore or Auth metadata
+            Date joinDate = null;
+            if (joinTs != null) {
+                joinDate = joinTs.toDate();
+            } else if (rec.getUserMetadata() != null) {
+                joinDate = new Date(rec.getUserMetadata().getCreationTimestamp());
+            }
+
+            return new UserProfile(email, role, firstName, lastName, displayName, joinDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Update first name, last name, and/or display name (profile screen).
+     * Any null value is ignored (field not changed).
+     */
+    public void updateUserProfileNames(String email,
+                                       String firstName,
+                                       String lastName,
+                                       String displayName) throws Exception {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Email required");
+        }
+
+        UserRecord rec = FirebaseAuth.getInstance().getUserByEmail(email);
+        if (rec == null) {
+            throw new IllegalArgumentException("No Auth user found for email: " + email);
+        }
+
+        String uid = rec.getUid();
+        DocumentReference ref = db.collection("users").document(uid);
+
+        Map<String, Object> data = new HashMap<>();
+        if (firstName != null)   data.put("first_name", firstName);
+        if (lastName != null)    data.put("last_name", lastName);
+        if (displayName != null) data.put("display_name", displayName);
+
+        if (!data.isEmpty()) {
+            ref.set(data, SetOptions.merge()).get();
+        }
+
+        // Also sync display name back to Firebase Auth
+        if (displayName != null && !displayName.isBlank()) {
+            FirebaseAuth.getInstance()
+                    .updateUser(new UserRecord.UpdateRequest(uid).setDisplayName(displayName));
+        }
+    }
+
+    // Convenience: from profile screen you can just call sendPasswordResetEmail(email)
+    // for "Change password" – no extra method needed.
 
     // =====================================================================
     // BOOKS
@@ -535,7 +656,7 @@ public class FirebaseService {
                 q = q.whereEqualTo("returned", returnedFilter);
             }
 
-            // ⚠️ No orderBy here → avoids composite index requirement
+            // No orderBy here → avoids composite index requirement
             List<QueryDocumentSnapshot> docs = q.get().get().getDocuments();
             for (QueryDocumentSnapshot d : docs) {
                 String id    = d.getId();
