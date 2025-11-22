@@ -1,213 +1,168 @@
 package com.lms.lmsfinal;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.List;
-
 public class AdminBooksContentController {
 
+    // Table + columns
     @FXML private TableView<Book> table;
-    @FXML private TableColumn<Book, String> cIsbn, cTitle, cAuthor, cPublisher;
-    @FXML private TableColumn<Book, Integer> cTotal, cAvail;
+    @FXML private TableColumn<Book, String> cIsbn;
+    @FXML private TableColumn<Book, String> cTitle;
+    @FXML private TableColumn<Book, String> cAuthor;
+    @FXML private TableColumn<Book, String> cCatagory;   // note: FXML id is "cCatagory"
+    @FXML private TableColumn<Book, String> cPublisher;
+    @FXML private TableColumn<Book, Integer> cTotal;
+    @FXML private TableColumn<Book, Integer> cAvail;
 
+    // Editor fields
+    @FXML private TextField fIsbn;
+    @FXML private TextField fTitle;
+    @FXML private TextField fAuthor;
+    @FXML private TextField fCatagory;   // FXML spelling "Catagory"
+    @FXML private TextField fPublisher;
+    @FXML private TextField fTotal;
+    @FXML private TextField fAvail;
+
+    // Search + status
     @FXML private TextField searchField;
-    @FXML private TextField fIsbn, fTitle, fAuthor, fPublisher, fTotal, fAvail;
     @FXML private Label status;
 
-    @FXML private Button /* optional if present in your FXML */ addButton;
-    @FXML private Button /* optional */ updateButton;
-    @FXML private Button /* optional */ deleteButton;
-    @FXML private Button /* optional */ searchButton;
-    @FXML private Button /* optional */ resetButton;
-
     private final FirebaseService firebase = new FirebaseService();
-    private final ObservableList<Book> rows = FXCollections.observableArrayList();
+    private final ObservableList<Book> books = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
+        // Bind columns to Book properties (names must match getters: getIsbn(), getTitle(), etc.)
         cIsbn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
         cTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         cAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
+        cCatagory.setCellValueFactory(new PropertyValueFactory<>("category")); // property name, not fx:id
         cPublisher.setCellValueFactory(new PropertyValueFactory<>("publisher"));
         cTotal.setCellValueFactory(new PropertyValueFactory<>("totalCopies"));
         cAvail.setCellValueFactory(new PropertyValueFactory<>("availableCopies"));
-        table.setItems(rows);
 
-        table.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> {
-            if (n != null) {
-                fIsbn.setText(n.getIsbn());
-                fTitle.setText(n.getTitle());
-                fAuthor.setText(n.getAuthor());
-                fPublisher.setText(n.getPublisher());
-                fTotal.setText(String.valueOf(n.getTotalCopies()));
-                fAvail.setText(String.valueOf(n.getAvailableCopies()));
+        table.setItems(books);
+        refreshTable();
+
+        // When user clicks a row, load it into the form
+        table.getSelectionModel().selectedItemProperty().addListener((obs, old, b) -> {
+            if (b != null) {
+                fIsbn.setText(b.getIsbn());
+                fTitle.setText(b.getTitle());
+                fAuthor.setText(b.getAuthor());
+                fCatagory.setText(b.getCategory());
+                fPublisher.setText(b.getPublisher());
+                fTotal.setText(String.valueOf(b.getTotalCopies()));
+                fAvail.setText(String.valueOf(b.getAvailableCopies()));
             }
         });
-
-        // Initial load
-        refresh();
     }
 
-    // ----------------- Actions -----------------
+    // ===================== BUTTON HANDLERS =====================
 
-    @FXML private void onSearch() {
-        final String q = val(searchField);
-        setBusy(true);
-        runAsync(
-                () -> q.isEmpty() ? firebase.getBooks() : firebase.searchBooks(q),
-                books -> {
-                    rows.setAll(books);
-                    status("Loaded " + books.size() + " result(s).");
-                }
-        );
-    }
-
-    @FXML private void onReset() {
-        searchField.clear();
-        refresh();
-    }
-
-    @FXML private void onAdd() {
-        Book b;
-        try { b = readFormValidated(true); } catch (IllegalArgumentException ex) { status("Error: " + ex.getMessage()); return; }
-
-        setBusy(true);
-        runAsync(
-                () -> {
-                    firebase.addBook(b);                // block until write completes
-                    return firebase.getBooks();         // read fresh list immediately
-                },
-                books -> {
-                    rows.setAll(books);
-                    status("Added: " + b.getTitle());
-                    selectByIsbn(b.getIsbn());
-                }
-        );
-    }
-
-    @FXML private void onUpdate() {
-        Book b;
-        try { b = readFormValidated(false); } catch (IllegalArgumentException ex) { status("Error: " + ex.getMessage()); return; }
-
-        setBusy(true);
-        runAsync(
-                () -> {
-                    firebase.updateBook(b);
-                    return firebase.getBooks();
-                },
-                books -> {
-                    rows.setAll(books);
-                    status("Updated: " + b.getTitle());
-                    selectByIsbn(b.getIsbn());
-                }
-        );
-    }
-
-    @FXML private void onDelete() {
-        Book sel = table.getSelectionModel().getSelectedItem();
-        if (sel == null) { status("Select a book first."); return; }
-
-        setBusy(true);
-        runAsync(
-                () -> {
-                    firebase.deleteBookByIsbn(sel.getIsbn());
-                    return firebase.getBooks();
-                },
-                books -> {
-                    rows.setAll(books);
-                    status("Deleted: " + sel.getTitle());
-                }
-        );
-    }
-
-    // ----------------- Helpers -----------------
-
-    private void refresh() {
-        setBusy(true);
-        runAsync(
-                firebase::getBooks,
-                books -> {
-                    rows.setAll(books);
-                    status("Loaded " + books.size() + " book(s).");
-                }
-        );
-    }
-
-    /** Validate inputs and build Book. If adding, ISBN must be non-empty; always check totals. */
-    private Book readFormValidated(boolean adding) {
-        String isbn = val(fIsbn);
-        String title = val(fTitle);
-        String author = val(fAuthor);
-        String publisher = val(fPublisher);
-        int total = parseInt(val(fTotal), 0);
-        int avail = parseInt(val(fAvail), 0);
-
-        if (adding && isbn.isBlank()) throw new IllegalArgumentException("ISBN is required.");
-        if (title.isBlank()) throw new IllegalArgumentException("Title is required.");
-        if (total < 0) throw new IllegalArgumentException("Total copies cannot be negative.");
-        if (avail < 0) throw new IllegalArgumentException("Available copies cannot be negative.");
-        if (avail > total) throw new IllegalArgumentException("Available copies cannot exceed total copies.");
-
-        return new Book(isbn, title, author, publisher, total, avail);
-    }
-
-    private String val(TextField t) { return (t == null || t.getText() == null) ? "" : t.getText().trim(); }
-    private int parseInt(String s, int def) { try { return Integer.parseInt(s.trim()); } catch (Exception e) { return def; } }
-
-    private void status(String s) { if (status != null) status.setText(s); }
-
-    /** Run a background supplier and deliver result to UI; also clears busy state. */
-    private <T> void runAsync(java.util.concurrent.Callable<T> work, java.util.function.Consumer<T> onUi) {
-        Task<T> task = new Task<>() {
-            @Override protected T call() throws Exception { return work.call(); }
-        };
-        task.setOnSucceeded(e -> {
-            try { onUi.accept(task.getValue()); }
-            finally { setBusy(false); }
-        });
-        task.setOnFailed(e -> {
-            Throwable ex = task.getException();
-            ex.printStackTrace();
-            status("Error: " + (ex == null ? "Unknown" : ex.getMessage()));
-            setBusy(false);
-        });
-        new Thread(task, "books-io").start();
-    }
-
-    /** Disable/enable controls while IO is running. */
-    private void setBusy(boolean busy) {
-        if (table != null) table.setDisable(busy);
-        if (searchField != null) searchField.setDisable(busy);
-        if (fIsbn != null) fIsbn.setDisable(busy);
-        if (fTitle != null) fTitle.setDisable(busy);
-        if (fAuthor != null) fAuthor.setDisable(busy);
-        if (fPublisher != null) fPublisher.setDisable(busy);
-        if (fTotal != null) fTotal.setDisable(busy);
-        if (fAvail != null) fAvail.setDisable(busy);
-
-        // If you wired these @FXML buttons, they’ll be toggled too. If not, no problem.
-        if (addButton != null) addButton.setDisable(busy);
-        if (updateButton != null) updateButton.setDisable(busy);
-        if (deleteButton != null) deleteButton.setDisable(busy);
-        if (searchButton != null) searchButton.setDisable(busy);
-        if (resetButton != null) resetButton.setDisable(busy);
-    }
-
-    /** After reload, reselect the updated/added row by ISBN. */
-    private void selectByIsbn(String isbn) {
-        if (isbn == null || isbn.isBlank()) return;
-        for (Book b : rows) {
-            if (isbn.equals(b.getIsbn())) {
-                table.getSelectionModel().select(b);
-                table.scrollTo(b);
-                break;
-            }
+    @FXML
+    private void onAdd() {
+        try {
+            Book book = formToBook();
+            firebase.addBook(book);
+            setStatus("✅ Added: " + book.getTitle());
+            refreshTable();
+            clearForm();
+        } catch (Exception e) {
+            setError("Add failed: " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void onUpdate() {
+        try {
+            Book book = formToBook();
+            firebase.updateBook(book);
+            setStatus("✅ Updated: " + book.getTitle());
+            refreshTable();
+        } catch (Exception e) {
+            setError("Update failed: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void onDelete() {
+        try {
+            String isbn = fIsbn.getText().trim();
+            if (isbn.isEmpty()) {
+                setError("ISBN required to delete");
+                return;
+            }
+            firebase.deleteBookByIsbn(isbn);
+            setStatus("🗑 Deleted ISBN: " + isbn);
+            refreshTable();
+            clearForm();
+        } catch (Exception e) {
+            setError("Delete failed: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void onSearch() {
+        String q = searchField.getText();
+        books.setAll(firebase.searchBooks(q));
+        setStatus("🔍 Showing search results for: " + (q == null ? "" : q));
+    }
+
+    @FXML
+    private void onReset() {
+        searchField.clear();
+        refreshTable();
+        setStatus("🔄 Reset to all books");
+    }
+
+    // ===================== HELPERS =====================
+
+    private void refreshTable() {
+        books.setAll(firebase.getBooks());
+    }
+
+    private Book formToBook() {
+        String isbn = fIsbn.getText().trim();
+        String title = fTitle.getText().trim();
+        String author = fAuthor.getText().trim();
+        String category = fCatagory.getText().trim();
+        String publisher = fPublisher.getText().trim();
+
+        int total = parseInt(fTotal.getText());
+        int avail = parseInt(fAvail.getText());
+
+        // Use constructor that matches Book
+        return new Book(isbn, title, author, category, publisher, total, avail);
+    }
+
+    private int parseInt(String text) {
+        try {
+            return Integer.parseInt(text.trim());
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private void clearForm() {
+        fIsbn.clear();
+        fTitle.clear();
+        fAuthor.clear();
+        fCatagory.clear();
+        fPublisher.clear();
+        fTotal.clear();
+        fAvail.clear();
+    }
+
+    private void setStatus(String msg) {
+        status.setText(msg);
+    }
+
+    private void setError(String msg) {
+        status.setText("Error: " + msg);
     }
 }

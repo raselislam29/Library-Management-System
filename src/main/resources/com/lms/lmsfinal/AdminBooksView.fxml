@@ -27,6 +27,7 @@
                     <TableColumn fx:id="colTitle" text="Title" prefWidth="260"/>
                     <TableColumn fx:id="colAuthor" text="Author" prefWidth="180"/>
                     <TableColumn fx:id="colIsbn" text="ISBN" prefWidth="160"/>
+                    <TableColumn fx:id="colCatagory" text="Catagory" prefWidth="160"/>
                     <TableColumn fx:id="colAvail" text="Available" prefWidth="100"/>
                 </columns>
             </TableView>

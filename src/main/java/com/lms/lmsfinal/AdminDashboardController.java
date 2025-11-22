@@ -58,12 +58,18 @@ public class AdminDashboardController {
         refreshBorrows();
     }
 
-    @FXML private void onLogout() { Session.clear(); LibraryApp.setScene("/com/lms/lmsfinal/LoginView.fxml", "Login / Register", 1200, 760); }
+    @FXML
+    private void onLogout() {
+        Session.clear();
+        LibraryApp.setScene("/com/lms/lmsfinal/LoginView.fxml", "Login / Register", 1200, 760);
+    }
 
-    @FXML private void onSearchBooks() {
+    @FXML
+    private void onSearchBooks() {
         String q = searchField.getText() == null ? "" : searchField.getText().trim();
         Task<Void> t = new Task<>() {
-            @Override protected Void call() {
+            @Override
+            protected Void call() {
                 List<Book> data = q.isEmpty() ? firebase.getBooks() : firebase.searchBooks(q);
                 Platform.runLater(() -> books.setAll(data));
                 return null;
@@ -72,11 +78,16 @@ public class AdminDashboardController {
         new Thread(t).start();
     }
 
-    @FXML private void onResetBooks() { searchField.clear(); refreshBooks(); }
+    @FXML
+    private void onResetBooks() {
+        searchField.clear();
+        refreshBooks();
+    }
 
     private void refreshBooks() {
         Task<Void> t = new Task<>() {
-            @Override protected Void call() {
+            @Override
+            protected Void call() {
                 List<Book> data = firebase.getBooks();
                 Platform.runLater(() -> books.setAll(data));
                 return null;
@@ -85,32 +96,44 @@ public class AdminDashboardController {
         new Thread(t).start();
     }
 
-    @FXML private void onAddBook() {
+    @FXML
+    private void onAddBook() {
         try {
             Book b = readBookForm();
             firebase.addBook(b);
             statusBooks.setText("Added " + b.getTitle());
             refreshBooks();
-        } catch (Exception e) { statusBooks.setText("Error: " + e.getMessage()); }
+        } catch (Exception e) {
+            statusBooks.setText("Error: " + e.getMessage());
+        }
     }
 
-    @FXML private void onUpdateBook() {
+    @FXML
+    private void onUpdateBook() {
         try {
             Book b = readBookForm();
             firebase.updateBook(b);
             statusBooks.setText("Updated " + b.getTitle());
             refreshBooks();
-        } catch (Exception e) { statusBooks.setText("Error: " + e.getMessage()); }
+        } catch (Exception e) {
+            statusBooks.setText("Error: " + e.getMessage());
+        }
     }
 
-    @FXML private void onDeleteBook() {
+    @FXML
+    private void onDeleteBook() {
         Book b = booksTable.getSelectionModel().getSelectedItem();
-        if (b == null) { statusBooks.setText("Select a book first."); return; }
+        if (b == null) {
+            statusBooks.setText("Select a book first.");
+            return;
+        }
         try {
             firebase.deleteBookByIsbn(b.getIsbn());
             statusBooks.setText("Deleted " + b.getTitle());
             refreshBooks();
-        } catch (Exception e) { statusBooks.setText("Error: " + e.getMessage()); }
+        } catch (Exception e) {
+            statusBooks.setText("Error: " + e.getMessage());
+        }
     }
 
     private Book readBookForm() {
@@ -120,17 +143,39 @@ public class AdminDashboardController {
         String publisher = val(publisherField);
         int total = parseInt(val(totalField), 1);
         int avail = parseInt(val(availableField), total);
-        return new Book(isbn, title, author, publisher, total, avail);
+
+        // No category field in this form, so use a default or change later if needed
+        String category = "General";
+
+        // Match Book constructor: (isbn, title, author, category, publisher, total, available)
+        return new Book(isbn, title, author, category, publisher, total, avail);
     }
 
-    private String val(TextField tf) { return tf.getText() == null ? "" : tf.getText().trim(); }
-    private int parseInt(String s, int d) { try { return Integer.parseInt(s); } catch (Exception e) { return d; } }
+    private String val(TextField tf) {
+        return tf.getText() == null ? "" : tf.getText().trim();
+    }
+
+    private int parseInt(String s, int d) {
+        try {
+            return Integer.parseInt(s);
+        } catch (Exception e) {
+            return d;
+        }
+    }
 
     public static class BorrowRow {
         private final String studentName, studentEmail, isbn, title, dueDateStr, overdueStr;
-        public BorrowRow(String studentName, String studentEmail, String isbn, String title, String dueDateStr, String overdueStr) {
-            this.studentName = studentName; this.studentEmail = studentEmail; this.isbn = isbn; this.title = title; this.dueDateStr = dueDateStr; this.overdueStr = overdueStr;
+
+        public BorrowRow(String studentName, String studentEmail, String isbn, String title,
+                         String dueDateStr, String overdueStr) {
+            this.studentName = studentName;
+            this.studentEmail = studentEmail;
+            this.isbn = isbn;
+            this.title = title;
+            this.dueDateStr = dueDateStr;
+            this.overdueStr = overdueStr;
         }
+
         public String getStudentName() { return studentName; }
         public String getStudentEmail() { return studentEmail; }
         public String getIsbn() { return isbn; }
@@ -139,17 +184,34 @@ public class AdminDashboardController {
         public String getOverdueStr() { return overdueStr; }
     }
 
-    @FXML private void refreshBorrows() {
+    @FXML
+    private void refreshBorrows() {
         Task<Void> t = new Task<>() {
-            @Override protected Void call() {
+            @Override
+            protected Void call() {
                 var list = firebase.getActiveBorrows(); // all not returned
                 var rows = FXCollections.<BorrowRow>observableArrayList();
                 for (var br : list) {
-                    LocalDate due = br.getDueDate() == null ? null : br.getDueDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate due = br.getDueDate() == null
+                            ? null
+                            : br.getDueDate().toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate();
+
                     long overdueDays = 0;
-                    if (due != null) overdueDays = java.time.temporal.ChronoUnit.DAYS.between(due, LocalDate.now());
+                    if (due != null) {
+                        overdueDays = java.time.temporal.ChronoUnit.DAYS.between(due, LocalDate.now());
+                    }
                     String overdueStr = overdueDays > 0 ? overdueDays + " days" : "-";
-                    rows.add(new BorrowRow(br.getStudentName(), br.getStudentEmail(), br.getIsbn(), br.getTitle(), br.getDueDateStr(), overdueStr));
+
+                    rows.add(new BorrowRow(
+                            br.getStudentName(),
+                            br.getStudentEmail(),
+                            br.getIsbn(),
+                            br.getTitle(),
+                            br.getDueDateStr(),
+                            overdueStr
+                    ));
                 }
                 Platform.runLater(() -> borrows.setAll(rows));
                 return null;
@@ -158,9 +220,13 @@ public class AdminDashboardController {
         new Thread(t).start();
     }
 
-    @FXML private void markReturned() {
+    @FXML
+    private void markReturned() {
         var sel = borrowsTable.getSelectionModel().getSelectedItem();
-        if (sel == null) { statusBorrows.setText("Select a row."); return; }
+        if (sel == null) {
+            statusBorrows.setText("Select a row.");
+            return;
+        }
         try {
             firebase.returnBook(sel.getIsbn(), sel.getStudentEmail());
             statusBorrows.setText("Marked returned.");

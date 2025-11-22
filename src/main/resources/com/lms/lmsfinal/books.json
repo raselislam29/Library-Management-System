@@ -1,0 +1,589 @@
+{
+  "Books": {
+    "Book 1": {
+      "author": "F. Scott Fitzgerald",
+      "availableCopies": 2,
+      "category": "Classic Literature",
+      "isbn": "9780743273565",
+      "publisher": "Scribner",
+      "title": "The Great Gatsby",
+      "totalCopies": 4
+    },
+    "Book 2": {
+      "author": "George Orwell",
+      "availableCopies": 3,
+      "category": "Dystopian",
+      "isbn": "9780451524935",
+      "publisher": "Signet Classics",
+      "title": "1984",
+      "totalCopies": 5
+    },
+    "Book 3": {
+      "author": "Harper Lee",
+      "availableCopies": 2,
+      "category": "Classic Literature",
+      "isbn": "9780061120084",
+      "publisher": "J.B. Lippincott & Co.",
+      "title": "To Kill a Mockingbird",
+      "totalCopies": 6
+    },
+    "Book 4": {
+      "author": "Jane Austen",
+      "availableCopies": 5,
+      "category": "Romance",
+      "isbn": "9780141439518",
+      "publisher": "Penguin Classics",
+      "title": "Pride and Prejudice",
+      "totalCopies": 5
+    },
+    "Book 5": {
+      "author": "Herman Melville",
+      "availableCopies": 1,
+      "category": "Adventure",
+      "isbn": "9781503280786",
+      "publisher": "CreateSpace Independent Publishing",
+      "title": "Moby-Dick",
+      "totalCopies": 4
+    },
+    "Book 6": {
+      "author": "Aldous Huxley",
+      "availableCopies": 3,
+      "category": "Dystopian",
+      "isbn": "9780060850524",
+      "publisher": "Harper Perennial Modern Classics",
+      "title": "Brave New World",
+      "totalCopies": 8
+    },
+    "Book 7": {
+      "author": "J.D. Salinger",
+      "availableCopies": 1,
+      "category": "Classic Literature",
+      "isbn": "9780316769488",
+      "publisher": "Little, Brown and Company",
+      "title": "The Catcher in the Rye",
+      "totalCopies": 2
+    },
+    "Book 8": {
+      "author": "J.R.R. Tolkien",
+      "availableCopies": 7,
+      "category": "Fantasy",
+      "isbn": "9780547928227",
+      "publisher": "Houghton Mifflin Harcourt",
+      "title": "The Hobbit",
+      "totalCopies": 10
+    },
+    "Book 9": {
+      "author": "Ray Bradbury",
+      "availableCopies": 4,
+      "category": "Dystopian",
+      "isbn": "9781451673319",
+      "publisher": "Simon & Schuster",
+      "title": "Fahrenheit 451",
+      "totalCopies": 4
+    },
+    "Book 10": {
+      "author": "Charlotte Brontë",
+      "availableCopies": 2,
+      "category": "Romance",
+      "isbn": "9780141441146",
+      "publisher": "Penguin Classics",
+      "title": "Jane Eyre",
+      "totalCopies": 6
+    },
+    "Book 11": {
+      "author": "Emily Brontë",
+      "availableCopies": 6,
+      "category": "Gothic Romance",
+      "isbn": "9780141439556",
+      "publisher": "Penguin Classics",
+      "title": "Wuthering Heights",
+      "totalCopies": 8
+    },
+    "Book 12": {
+      "author": "George Orwell",
+      "availableCopies": 2,
+      "category": "Political Allegory",
+      "isbn": "9780451526342",
+      "publisher": "Signet Classics",
+      "title": "Animal Farm",
+      "totalCopies": 4
+    },
+    "Book 13": {
+      "author": "Homer",
+      "availableCopies": 3,
+      "category": "Epic Poetry",
+      "isbn": "9780140268867",
+      "publisher": "Penguin Classics",
+      "title": "The Odyssey",
+      "totalCopies": 5
+    },
+    "Book 14": {
+      "author": "Fyodor Dostoevsky",
+      "availableCopies": 1,
+      "category": "Psychological Fiction",
+      "isbn": "9780143058144",
+      "publisher": "Penguin Classics",
+      "title": "Crime and Punishment",
+      "totalCopies": 6
+    },
+    "Book 15": {
+      "author": "Leo Tolstoy",
+      "availableCopies": 3,
+      "category": "Historical Fiction",
+      "isbn": "9780199232765",
+      "publisher": "Oxford University Press",
+      "title": "War and Peace",
+      "totalCopies": 7
+    },
+    "Book 16": {
+      "author": "Homer",
+      "availableCopies": 2,
+      "category": "Epic Poetry",
+      "isbn": "9780140275360",
+      "publisher": "Penguin Classics",
+      "title": "The Iliad",
+      "totalCopies": 5
+    },
+    "Book 17": {
+      "author": "J.R.R. Tolkien",
+      "availableCopies": 1,
+      "category": "Fantasy",
+      "isbn": "9780547928210",
+      "publisher": "Houghton Mifflin",
+      "title": "The Lord of the Rings: The Fellowship of the Ring",
+      "totalCopies": 4
+    },
+    "Book 18": {
+      "author": "J.R.R. Tolkien",
+      "availableCopies": 2,
+      "category": "Fantasy",
+      "isbn": "9780547928203",
+      "publisher": "Houghton Mifflin",
+      "title": "The Lord of the Rings: The Two Towers",
+      "totalCopies": 6
+    },
+    "Book 19": {
+      "author": "J.R.R. Tolkien",
+      "availableCopies": 6,
+      "category": "Fantasy",
+      "isbn": "9780547928197",
+      "publisher": "Houghton Mifflin",
+      "title": "The Lord of the Rings: The Return of the King",
+      "totalCopies": 7
+    },
+    "Book 20": {
+      "author": "Charles Dickens",
+      "availableCopies": 4,
+      "category": "Classic Literature",
+      "isbn": "9780141439563",
+      "publisher": "Penguin Classics",
+      "title": "Great Expectations",
+      "totalCopies": 7
+    },
+    "Book 21": {
+      "author": "Bram Stoker",
+      "availableCopies": 3,
+      "category": "Gothic Horror",
+      "isbn": "9780141439846",
+      "publisher": "Penguin Classics",
+      "title": "Dracula",
+      "totalCopies": 6
+    },
+    "Book 22": {
+      "author": "Mary Shelley",
+      "availableCopies": 5,
+      "category": "Gothic Science Fiction",
+      "isbn": "9780141439471",
+      "publisher": "Penguin Classics",
+      "title": "Frankenstein",
+      "totalCopies": 7
+    },
+    "Book 23": {
+      "author": "Oscar Wilde",
+      "availableCopies": 1,
+      "category": "Gothic Fiction",
+      "isbn": "9780141439570",
+      "publisher": "Penguin Classics",
+      "title": "The Picture of Dorian Gray",
+      "totalCopies": 5
+    },
+    "Book 24": {
+      "author": "Victor Hugo",
+      "availableCopies": 5,
+      "category": "Historical Fiction",
+      "isbn": "9780451419439",
+      "publisher": "Signet Classics",
+      "title": "Les Misérables",
+      "totalCopies": 7
+    },
+    "Book 25": {
+      "author": "Charles Dickens",
+      "availableCopies": 1,
+      "category": "Historical Fiction",
+      "isbn": "9780141439600",
+      "publisher": "Penguin Classics",
+      "title": "A Tale of Two Cities",
+      "totalCopies": 5
+    },
+    "Book 26": {
+      "author": "Alexandre Dumas",
+      "availableCopies": 2,
+      "category": "Adventure",
+      "isbn": "9780140449266",
+      "publisher": "Penguin Classics",
+      "title": "The Count of Monte Cristo",
+      "totalCopies": 6
+    },
+    "Book 27": {
+      "author": "Fyodor Dostoevsky",
+      "availableCopies": 6,
+      "category": "Philosophical Fiction",
+      "isbn": "9780374528379",
+      "publisher": "Farrar, Straus and Giroux",
+      "title": "The Brothers Karamazov",
+      "totalCopies": 6
+    },
+    "Book 28": {
+      "author": "Leo Tolstoy",
+      "availableCopies": 4,
+      "category": "Classic Literature",
+      "isbn": "9780140449174",
+      "publisher": "Penguin Classics",
+      "title": "Anna Karenina",
+      "totalCopies": 7
+    },
+    "Book 29": {
+      "author": "John Steinbeck",
+      "availableCopies": 2,
+      "category": "Social Realism",
+      "isbn": "9780143039433",
+      "publisher": "Penguin Classics",
+      "title": "The Grapes of Wrath",
+      "totalCopies": 8
+    },
+    "Book 30": {
+      "author": "John Steinbeck",
+      "availableCopies": 2,
+      "category": "Social Realism",
+      "isbn": "9780143039433-A",
+      "publisher": "Penguin Classics",
+      "title": "Of Mice and Men",
+      "totalCopies": 3
+    },
+    "Book 31": {
+      "author": "Joseph Heller",
+      "availableCopies": 4,
+      "category": "Satire",
+      "isbn": "9781451626650",
+      "publisher": "Simon & Schuster",
+      "title": "Catch-22",
+      "totalCopies": 6
+    },
+    "Book 32": {
+      "author": "Kurt Vonnegut",
+      "availableCopies": 3,
+      "category": "Science Fiction",
+      "isbn": "9780440180296",
+      "publisher": "Dell Publishing",
+      "title": "Slaughterhouse-Five",
+      "totalCopies": 5
+    },
+    "Book 33": {
+      "author": "Ernest Hemingway",
+      "availableCopies": 2,
+      "category": "Modernist",
+      "isbn": "9780743297332",
+      "publisher": "Scribner",
+      "title": "The Sun Also Rises",
+      "totalCopies": 4
+    },
+    "Book 34": {
+      "author": "Ernest Hemingway",
+      "availableCopies": 5,
+      "category": "War Fiction",
+      "isbn": "9780684801469",
+      "publisher": "Scribner",
+      "title": "A Farewell to Arms",
+      "totalCopies": 7
+    },
+    "Book 35": {
+      "author": "Ernest Hemingway",
+      "availableCopies": 1,
+      "category": "Classic Literature",
+      "isbn": "9780684801223",
+      "publisher": "Scribner",
+      "title": "The Old Man and the Sea",
+      "totalCopies": 4
+    },
+    "Book 36": {
+      "author": "Albert Camus",
+      "availableCopies": 3,
+      "category": "Philosophical Fiction",
+      "isbn": "9780679720201",
+      "publisher": "Vintage International",
+      "title": "The Stranger",
+      "totalCopies": 6
+    },
+    "Book 37": {
+      "author": "Franz Kafka",
+      "availableCopies": 2,
+      "category": "Existential Fiction",
+      "isbn": "9780805209990",
+      "publisher": "Schocken Books",
+      "title": "The Trial",
+      "totalCopies": 5
+    },
+    "Book 38": {
+      "author": "Gabriel García Márquez",
+      "availableCopies": 1,
+      "category": "Magical Realism",
+      "isbn": "9780060883287",
+      "publisher": "Harper Perennial Modern Classics",
+      "title": "One Hundred Years of Solitude",
+      "totalCopies": 7
+    },
+    "Book 39": {
+      "author": "Gabriel García Márquez",
+      "availableCopies": 3,
+      "category": "Magical Realism",
+      "isbn": "9780307389732",
+      "publisher": "Vintage",
+      "title": "Love in the Time of Cholera",
+      "totalCopies": 6
+    },
+    "Book 40": {
+      "author": "Franz Kafka",
+      "availableCopies": 1,
+      "category": "Existential Fiction",
+      "isbn": "9780553213690",
+      "publisher": "Bantam Classics",
+      "title": "The Metamorphosis",
+      "totalCopies": 4
+    },
+    "Book 41": {
+      "author": "Dante Alighieri",
+      "availableCopies": 2,
+      "category": "Religious Epic",
+      "isbn": "9780140448955",
+      "publisher": "Penguin Classics",
+      "title": "The Divine Comedy",
+      "totalCopies": 5
+    },
+    "Book 42": {
+      "author": "John Milton",
+      "availableCopies": 4,
+      "category": "Religious Epic",
+      "isbn": "9780140437222",
+      "publisher": "Penguin Classics",
+      "title": "Paradise Lost",
+      "totalCopies": 7
+    },
+    "Book 43": {
+      "author": "Mark Twain",
+      "availableCopies": 3,
+      "category": "Adventure",
+      "isbn": "9780486280615",
+      "publisher": "Dover Publications",
+      "title": "The Adventures of Huckleberry Finn",
+      "totalCopies": 4
+    },
+    "Book 44": {
+      "author": "Mark Twain",
+      "availableCopies": 4,
+      "category": "Adventure",
+      "isbn": "9780486400778",
+      "publisher": "Dover Publications",
+      "title": "The Adventures of Tom Sawyer",
+      "totalCopies": 6
+    },
+    "Book 45": {
+      "author": "Henry David Thoreau",
+      "availableCopies": 3,
+      "category": "Transcendentalist",
+      "isbn": "9780143038411",
+      "publisher": "Penguin Classics",
+      "title": "Walden",
+      "totalCopies": 5
+    },
+    "Book 46": {
+      "author": "Sylvia Plath",
+      "availableCopies": 2,
+      "category": "Psychological Fiction",
+      "isbn": "9780061148514",
+      "publisher": "Harper Perennial Modern Classics",
+      "title": "The Bell Jar",
+      "totalCopies": 4
+    },
+    "Book 47": {
+      "author": "Ralph Ellison",
+      "availableCopies": 4,
+      "category": "African American Literature",
+      "isbn": "9780679732761",
+      "publisher": "Vintage International",
+      "title": "Invisible Man",
+      "totalCopies": 6
+    },
+    "Book 48": {
+      "author": "Toni Morrison",
+      "availableCopies": 5,
+      "category": "African American Literature",
+      "isbn": "9781400033416",
+      "publisher": "Vintage",
+      "title": "Beloved",
+      "totalCopies": 7
+    },
+    "Book 49": {
+      "author": "Toni Morrison",
+      "availableCopies": 4,
+      "category": "African American Literature",
+      "isbn": "9780307389733",
+      "publisher": "Vintage",
+      "title": "Song of Solomon",
+      "totalCopies": 7
+    },
+    "Book 50": {
+      "author": "Zora Neale Hurston",
+      "availableCopies": 4,
+      "category": "African American Literature",
+      "isbn": "9780061120060",
+      "publisher": "Harper Perennial Modern Classics",
+      "title": "Their Eyes Were Watching God",
+      "totalCopies": 4
+    },
+    "Book 51": {
+      "author": "Chinua Achebe",
+      "availableCopies": 5,
+      "category": "Postcolonial Literature",
+      "isbn": "9780385474542",
+      "publisher": "Anchor",
+      "title": "Things Fall Apart",
+      "totalCopies": 6
+    },
+    "Book 52": {
+      "author": "Joseph Conrad",
+      "availableCopies": 3,
+      "category": "Modernist",
+      "isbn": "9780141441672",
+      "publisher": "Penguin Classics",
+      "title": "Heart of Darkness",
+      "totalCopies": 5
+    },
+    "Book 53": {
+      "author": "William Faulkner",
+      "availableCopies": 6,
+      "category": "Modernist",
+      "isbn": "9780679732242",
+      "publisher": "Vintage International",
+      "title": "The Sound and the Fury",
+      "totalCopies": 7
+    },
+    "Book 54": {
+      "author": "William Faulkner",
+      "availableCopies": 2,
+      "category": "Modernist",
+      "isbn": "9780679732259",
+      "publisher": "Vintage International",
+      "title": "As I Lay Dying",
+      "totalCopies": 4
+    },
+    "Book 55": {
+      "author": "John Steinbeck",
+      "availableCopies": 4,
+      "category": "Social Realism",
+      "isbn": "9780143039433",
+      "publisher": "Penguin Classics",
+      "title": "The Grapes of Wrath",
+      "totalCopies": 6
+    },
+    "Book 56": {
+      "author": "John Steinbeck",
+      "availableCopies": 3,
+      "category": "Family Saga",
+      "isbn": "9780143039434",
+      "publisher": "Penguin Classics",
+      "title": "East of Eden",
+      "totalCopies": 5
+    },
+    "Book 57": {
+      "author": "Jack London",
+      "availableCopies": 3,
+      "category": "Adventure",
+      "isbn": "9780451531827",
+      "publisher": "Signet Classics",
+      "title": "The Call of the Wild",
+      "totalCopies": 5
+    },
+    "Book 58": {
+      "author": "Jack London",
+      "availableCopies": 1,
+      "category": "Adventure",
+      "isbn": "9780451531828",
+      "publisher": "Signet Classics",
+      "title": "White Fang",
+      "totalCopies": 4
+    },
+    "Book 59": {
+      "author": "Jack Kerouac",
+      "availableCopies": 4,
+      "category": "Beat Literature",
+      "isbn": "9780140283297",
+      "publisher": "Penguin Classics",
+      "title": "On the Road",
+      "totalCopies": 8
+    },
+    "Book 60": {
+      "author": "Frank Herbert",
+      "availableCopies": 2,
+      "category": "Science Fiction",
+      "isbn": "9780441172719",
+      "publisher": "Ace",
+      "title": "Dune",
+      "totalCopies": 5
+    },
+    "Book 61": {
+      "author": "Albert Camus",
+      "availableCopies": 1,
+      "category": "Philosophical Fiction",
+      "isbn": "9780679720201",
+      "publisher": "Vintage International",
+      "title": "The Stranger",
+      "totalCopies": 4
+    },
+    "Book 62": {
+      "author": "Albert Camus",
+      "availableCopies": 4,
+      "category": "Philosophical Fiction",
+      "isbn": "9780679720218",
+      "publisher": "Vintage International",
+      "title": "The Plague",
+      "totalCopies": 6
+    },
+    "Book 63": {
+      "author": "Franz Kafka",
+      "availableCopies": 2,
+      "category": "Existential Fiction",
+      "isbn": "9780805209990",
+      "publisher": "Schocken Books",
+      "title": "The Trial",
+      "totalCopies": 7
+    },
+    "Book 64": {
+      "author": "Franz Kafka",
+      "availableCopies": 2,
+      "category": "Existential Fiction",
+      "isbn": "9780805210002",
+      "publisher": "Schocken Books",
+      "title": "The Castle",
+      "totalCopies": 4
+    },
+    "Book 65": {
+      "author": "Douglas Adams",
+      "availableCopies": 2,
+      "category": "Science Fiction",
+      "isbn": "9780345391803",
+      "publisher": "Del Rey",
+      "title": "The Hitchhiker's Guide to the Galaxy",
+      "totalCopies": 4
+    }
+  }
+}

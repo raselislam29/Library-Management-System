@@ -23,6 +23,7 @@
             <TableColumn fx:id="cIsbn" text="ISBN" prefWidth="140"/>
             <TableColumn fx:id="cTitle" text="Title" prefWidth="280"/>
             <TableColumn fx:id="cAuthor" text="Author" prefWidth="220"/>
+            <TableColumn fx:id="cCatagory" text="Catagory" prefWidth="220"/>
             <TableColumn fx:id="cPublisher" text="Publisher" prefWidth="180"/>
             <TableColumn fx:id="cTotal" text="Total" prefWidth="90"/>
             <TableColumn fx:id="cAvail" text="Available" prefWidth="100"/>
@@ -34,6 +35,7 @@
         <TextField fx:id="fIsbn" promptText="ISBN" prefWidth="150"/>
         <TextField fx:id="fTitle" promptText="Title" prefWidth="220"/>
         <TextField fx:id="fAuthor" promptText="Author" prefWidth="180"/>
+        <TextField fx:id="fCatagory" promptText="Catagory" prefWidth="180"/>
         <TextField fx:id="fPublisher" promptText="Publisher" prefWidth="180"/>
         <TextField fx:id="fTotal" promptText="Total" prefWidth="80"/>
         <TextField fx:id="fAvail" promptText="Available" prefWidth="90"/>

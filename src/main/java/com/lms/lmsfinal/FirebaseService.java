@@ -25,7 +25,6 @@ public class FirebaseService {
     private static final String AUTH_RESET_PW_URL =
             "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=" + FIREBASE_WEB_API_KEY;
 
-
     private static final String AUTH_SIGN_IN_URL =
             "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + FIREBASE_WEB_API_KEY;
     private static final String AUTH_SIGN_UP_URL =
@@ -56,6 +55,11 @@ public class FirebaseService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to init Firebase Admin SDK", e);
         }
+    }
+
+    // ✅ Expose Firestore if you ever need it directly
+    public Firestore getDb() {
+        return db;
     }
 
     // =====================================================================
@@ -126,6 +130,7 @@ public class FirebaseService {
             return SignUpResult.err("Network or server error: " + e.getMessage());
         }
     }
+
     public static class PasswordResetResult {
         public final boolean ok;
         public final String errorText;
@@ -139,18 +144,17 @@ public class FirebaseService {
         public static PasswordResetResult err(String m){ return new PasswordResetResult(false, m); }
     }
 
-
     private String mapAuthError(String responseBody) {
         try {
             ErrorEnvelope env = gson.fromJson(responseBody, ErrorEnvelope.class);
             if (env != null && env.error != null && env.error.message != null) {
                 String m = env.error.message;
                 switch (m) {
-                    case "EMAIL_EXISTS":        return "This email is already registered.";
-                    case "INVALID_EMAIL":       return "Please enter a valid email address.";
+                    case "EMAIL_EXISTS":          return "This email is already registered.";
+                    case "INVALID_EMAIL":         return "Please enter a valid email address.";
                     case "OPERATION_NOT_ALLOWED": return "Email/password sign-in is disabled in Firebase.";
-                    case "API_KEY_INVALID":     return "Firebase API key is invalid or mismatched.";
-                    case "EMAIL_NOT_FOUND":   return "No account found with this email.";
+                    case "API_KEY_INVALID":       return "Firebase API key is invalid or mismatched.";
+                    case "EMAIL_NOT_FOUND":       return "No account found with this email.";
                     default:
                         if (m.contains("WEAK_PASSWORD")) return "Password is too weak (min 6 chars).";
                         return m.replace('_', ' ');
@@ -159,6 +163,7 @@ public class FirebaseService {
         } catch (Exception ignore) { }
         return "Registration failed. Please check your email and password.";
     }
+
     public PasswordResetResult sendPasswordResetEmail(String email) {
         try {
             String body = String.format(
@@ -174,7 +179,6 @@ public class FirebaseService {
 
             HttpResponse<String> res = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
             if (res.statusCode() == 200) {
-                // Success: Firebase sent the email
                 return PasswordResetResult.ok();
             } else {
                 String friendly = mapAuthError(res.body());
@@ -189,7 +193,6 @@ public class FirebaseService {
             return PasswordResetResult.err("Network or server error: " + e.getMessage());
         }
     }
-
 
     // =====================================================================
     // USERS (Firestore)

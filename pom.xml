@@ -17,6 +17,18 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>9.2.0</version>
+        </dependency>
+
+        <!-- Gson (to read JSON file) -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.11.0</version>
+        </dependency>
         <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>

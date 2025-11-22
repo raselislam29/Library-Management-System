@@ -4,6 +4,7 @@ public class Book {
     private String isbn;
     private String title;
     private String author;
+    private String category;      // 🔹 lower-case, consistent everywhere
     private String publisher;
     private int totalCopies;
     private int availableCopies;
@@ -11,16 +12,22 @@ public class Book {
     // Required no-arg constructor for Firestore
     public Book() {}
 
-    public Book(String isbn, String title, String author, String publisher, int totalCopies, int availableCopies) {
+    public Book(String isbn,
+                String title,
+                String author,
+                String category,
+                String publisher,
+                int totalCopies,
+                int availableCopies) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
+        this.category = category;
         this.publisher = publisher;
         this.totalCopies = totalCopies;
         this.availableCopies = availableCopies;
     }
 
-    // Getters and setters (must match Firestore keys)
     public String getIsbn() { return isbn; }
     public void setIsbn(String isbn) { this.isbn = isbn; }
 
@@ -29,6 +36,9 @@ public class Book {
 
     public String getAuthor() { return author; }
     public void setAuthor(String author) { this.author = author; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 
     public String getPublisher() { return publisher; }
     public void setPublisher(String publisher) { this.publisher = publisher; }
