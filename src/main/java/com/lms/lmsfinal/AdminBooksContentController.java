@@ -8,47 +8,46 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class AdminBooksContentController {
 
-    // Table + columns
     @FXML private TableView<Book> table;
     @FXML private TableColumn<Book, String> cIsbn;
     @FXML private TableColumn<Book, String> cTitle;
     @FXML private TableColumn<Book, String> cAuthor;
-    @FXML private TableColumn<Book, String> cCatagory;   // note: FXML id is "cCatagory"
+    @FXML private TableColumn<Book, String> cCatagory;
     @FXML private TableColumn<Book, String> cPublisher;
     @FXML private TableColumn<Book, Integer> cTotal;
     @FXML private TableColumn<Book, Integer> cAvail;
 
-    // Editor fields
+    @FXML private TextField searchField;
+
     @FXML private TextField fIsbn;
     @FXML private TextField fTitle;
     @FXML private TextField fAuthor;
-    @FXML private TextField fCatagory;   // FXML spelling "Catagory"
+    @FXML private TextField fCatagory;
     @FXML private TextField fPublisher;
     @FXML private TextField fTotal;
     @FXML private TextField fAvail;
 
-    // Search + status
-    @FXML private TextField searchField;
     @FXML private Label status;
 
     private final FirebaseService firebase = new FirebaseService();
-    private final ObservableList<Book> books = FXCollections.observableArrayList();
+    private final ObservableList<Book> data = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
-        // Bind columns to Book properties (names must match getters: getIsbn(), getTitle(), etc.)
+
+        // Table setup
         cIsbn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
         cTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         cAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
-        cCatagory.setCellValueFactory(new PropertyValueFactory<>("category")); // property name, not fx:id
+        cCatagory.setCellValueFactory(new PropertyValueFactory<>("category"));
         cPublisher.setCellValueFactory(new PropertyValueFactory<>("publisher"));
         cTotal.setCellValueFactory(new PropertyValueFactory<>("totalCopies"));
         cAvail.setCellValueFactory(new PropertyValueFactory<>("availableCopies"));
 
-        table.setItems(books);
-        refreshTable();
+        table.setItems(data);
+        refresh();
 
-        // When user clicks a row, load it into the form
+        // Populate form when selecting a row
         table.getSelectionModel().selectedItemProperty().addListener((obs, old, b) -> {
             if (b != null) {
                 fIsbn.setText(b.getIsbn());
@@ -62,30 +61,52 @@ public class AdminBooksContentController {
         });
     }
 
-    // ===================== BUTTON HANDLERS =====================
+    // --------------------
+    // SEARCH
+    // --------------------
+
+    @FXML
+    private void onSearch() {
+        String q = searchField.getText().trim().toLowerCase();
+        if (q.isEmpty()) {
+            refresh();
+            return;
+        }
+        data.setAll(firebase.searchBooks(q));
+    }
+
+    @FXML
+    private void onReset() {
+        searchField.clear();
+        refresh();
+    }
+
+    // --------------------
+    // CRUD
+    // --------------------
 
     @FXML
     private void onAdd() {
         try {
-            Book book = formToBook();
-            firebase.addBook(book);
-            setStatus("✅ Added: " + book.getTitle());
-            refreshTable();
+            Book b = readForm();
+            firebase.addBook(b);
+            status.setText("Added: " + b.getTitle());
+            refresh();
             clearForm();
         } catch (Exception e) {
-            setError("Add failed: " + e.getMessage());
+            status.setText("Error: " + e.getMessage());
         }
     }
 
     @FXML
     private void onUpdate() {
         try {
-            Book book = formToBook();
-            firebase.updateBook(book);
-            setStatus("✅ Updated: " + book.getTitle());
-            refreshTable();
+            Book b = readForm();
+            firebase.updateBook(b);
+            status.setText("Updated: " + b.getTitle());
+            refresh();
         } catch (Exception e) {
-            setError("Update failed: " + e.getMessage());
+            status.setText("Error: " + e.getMessage());
         }
     }
 
@@ -94,57 +115,53 @@ public class AdminBooksContentController {
         try {
             String isbn = fIsbn.getText().trim();
             if (isbn.isEmpty()) {
-                setError("ISBN required to delete");
+                status.setText("ISBN required!");
                 return;
             }
             firebase.deleteBookByIsbn(isbn);
-            setStatus("🗑 Deleted ISBN: " + isbn);
-            refreshTable();
+            status.setText("Deleted ISBN: " + isbn);
+            refresh();
             clearForm();
         } catch (Exception e) {
-            setError("Delete failed: " + e.getMessage());
+            status.setText("Error: " + e.getMessage());
         }
     }
 
-    @FXML
-    private void onSearch() {
-        String q = searchField.getText();
-        books.setAll(firebase.searchBooks(q));
-        setStatus("🔍 Showing search results for: " + (q == null ? "" : q));
-    }
+    // --------------------
+    // UTILS
+    // --------------------
 
     @FXML
-    private void onReset() {
-        searchField.clear();
-        refreshTable();
-        setStatus("🔄 Reset to all books");
+    private void onRefresh() {
+        refresh();
     }
 
-    // ===================== HELPERS =====================
-
-    private void refreshTable() {
-        books.setAll(firebase.getBooks());
+    private void refresh() {
+        data.setAll(firebase.getBooks());
     }
 
-    private Book formToBook() {
-        String isbn = fIsbn.getText().trim();
-        String title = fTitle.getText().trim();
-        String author = fAuthor.getText().trim();
-        String category = fCatagory.getText().trim();
-        String publisher = fPublisher.getText().trim();
+    private Book readForm() {
+        String isbn = safe(fIsbn);
+        String title = safe(fTitle);
+        String author = safe(fAuthor);
+        String cat = safe(fCatagory);
+        String pub = safe(fPublisher);
 
-        int total = parseInt(fTotal.getText());
-        int avail = parseInt(fAvail.getText());
+        int total = parse(fTotal, 1);
+        int avail = parse(fAvail, total);
 
-        // Use constructor that matches Book
-        return new Book(isbn, title, author, category, publisher, total, avail);
+        return new Book(isbn, title, author, cat, pub, total, avail);
     }
 
-    private int parseInt(String text) {
+    private String safe(TextField tf) {
+        return tf.getText() == null ? "" : tf.getText().trim();
+    }
+
+    private int parse(TextField tf, int def) {
         try {
-            return Integer.parseInt(text.trim());
+            return Integer.parseInt(tf.getText().trim());
         } catch (Exception e) {
-            return 0;
+            return def;
         }
     }
 
@@ -156,13 +173,5 @@ public class AdminBooksContentController {
         fPublisher.clear();
         fTotal.clear();
         fAvail.clear();
-    }
-
-    private void setStatus(String msg) {
-        status.setText(msg);
-    }
-
-    private void setError(String msg) {
-        status.setText("Error: " + msg);
     }
 }

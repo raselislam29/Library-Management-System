@@ -20,7 +20,7 @@ public class AdminDashboardController {
     @FXML private TableView<Book> booksTable;
     @FXML private TableColumn<Book, String> colIsbn, colTitle, colAuthor, colPublisher;
     @FXML private TableColumn<Book, Integer> colTotal, colAvail;
-    @FXML private TextField searchField, isbnField, titleField, authorField, publisherField, totalField, availableField;
+    @FXML private TextField searchField;
     @FXML private Label statusBooks;
 
     // Borrows UI
@@ -64,14 +64,23 @@ public class AdminDashboardController {
         LibraryApp.setScene("/com/lms/lmsfinal/LoginView.fxml", "Login / Register", 1200, 760);
     }
 
+    // ================= BOOKS (read-only on dashboard) =================
+
     @FXML
     private void onSearchBooks() {
         String q = searchField.getText() == null ? "" : searchField.getText().trim();
         Task<Void> t = new Task<>() {
             @Override
             protected Void call() {
-                List<Book> data = q.isEmpty() ? firebase.getBooks() : firebase.searchBooks(q);
-                Platform.runLater(() -> books.setAll(data));
+                List<Book> data = q.isEmpty()
+                        ? firebase.getBooks()
+                        : firebase.searchBooks(q);
+                Platform.runLater(() -> {
+                    books.setAll(data);
+                    statusBooks.setText(q.isEmpty()
+                            ? "Showing all books"
+                            : "Showing results for: \"" + q + "\"");
+                });
                 return null;
             }
         };
@@ -82,6 +91,7 @@ public class AdminDashboardController {
     private void onResetBooks() {
         searchField.clear();
         refreshBooks();
+        statusBooks.setText("Showing all books");
     }
 
     private void refreshBooks() {
@@ -96,75 +106,26 @@ public class AdminDashboardController {
         new Thread(t).start();
     }
 
+    /**
+     * Open the dedicated Manage Books screen.
+     * Make sure AdminBooksView.fxml uses AdminBooksContentController.
+     */
     @FXML
-    private void onAddBook() {
-        try {
-            Book b = readBookForm();
-            firebase.addBook(b);
-            statusBooks.setText("Added " + b.getTitle());
-            refreshBooks();
-        } catch (Exception e) {
-            statusBooks.setText("Error: " + e.getMessage());
-        }
+    private void openManageBooks() {
+        // If your LibraryApp.setScene has a 4-arg overload, you can also do:
+        // LibraryApp.setScene("/com/lms/lmsfinal/AdminBooksView.fxml", "Manage Books", 1000, 700);
+        LibraryApp.setScene("/com/lms/lmsfinal/AdminBooksView.fxml", "Manage Books");
     }
 
-    @FXML
-    private void onUpdateBook() {
-        try {
-            Book b = readBookForm();
-            firebase.updateBook(b);
-            statusBooks.setText("Updated " + b.getTitle());
-            refreshBooks();
-        } catch (Exception e) {
-            statusBooks.setText("Error: " + e.getMessage());
-        }
-    }
-
-    @FXML
-    private void onDeleteBook() {
-        Book b = booksTable.getSelectionModel().getSelectedItem();
-        if (b == null) {
-            statusBooks.setText("Select a book first.");
-            return;
-        }
-        try {
-            firebase.deleteBookByIsbn(b.getIsbn());
-            statusBooks.setText("Deleted " + b.getTitle());
-            refreshBooks();
-        } catch (Exception e) {
-            statusBooks.setText("Error: " + e.getMessage());
-        }
-    }
-
-    private Book readBookForm() {
-        String isbn = val(isbnField);
-        String title = val(titleField);
-        String author = val(authorField);
-        String publisher = val(publisherField);
-        int total = parseInt(val(totalField), 1);
-        int avail = parseInt(val(availableField), total);
-
-        // No category field in this form, so use a default or change later if needed
-        String category = "General";
-
-        // Match Book constructor: (isbn, title, author, category, publisher, total, available)
-        return new Book(isbn, title, author, category, publisher, total, avail);
-    }
-
-    private String val(TextField tf) {
-        return tf.getText() == null ? "" : tf.getText().trim();
-    }
-
-    private int parseInt(String s, int d) {
-        try {
-            return Integer.parseInt(s);
-        } catch (Exception e) {
-            return d;
-        }
-    }
+    // ================= BORROWS =================
 
     public static class BorrowRow {
-        private final String studentName, studentEmail, isbn, title, dueDateStr, overdueStr;
+        private final String studentName;
+        private final String studentEmail;
+        private final String isbn;
+        private final String title;
+        private final String dueDateStr;
+        private final String overdueStr;
 
         public BorrowRow(String studentName, String studentEmail, String isbn, String title,
                          String dueDateStr, String overdueStr) {
@@ -176,12 +137,12 @@ public class AdminDashboardController {
             this.overdueStr = overdueStr;
         }
 
-        public String getStudentName() { return studentName; }
+        public String getStudentName()  { return studentName; }
         public String getStudentEmail() { return studentEmail; }
-        public String getIsbn() { return isbn; }
-        public String getTitle() { return title; }
-        public String getDueDateStr() { return dueDateStr; }
-        public String getOverdueStr() { return overdueStr; }
+        public String getIsbn()         { return isbn; }
+        public String getTitle()        { return title; }
+        public String getDueDateStr()   { return dueDateStr; }
+        public String getOverdueStr()   { return overdueStr; }
     }
 
     @FXML
@@ -191,6 +152,7 @@ public class AdminDashboardController {
             protected Void call() {
                 var list = firebase.getActiveBorrows(); // all not returned
                 var rows = FXCollections.<BorrowRow>observableArrayList();
+
                 for (var br : list) {
                     LocalDate due = br.getDueDate() == null
                             ? null
@@ -213,6 +175,7 @@ public class AdminDashboardController {
                             overdueStr
                     ));
                 }
+
                 Platform.runLater(() -> borrows.setAll(rows));
                 return null;
             }

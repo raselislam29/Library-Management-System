@@ -8,44 +8,97 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.lms.lmsfinal.UserDashboardController"
             prefWidth="1200.0" prefHeight="760.0"
-            styleClass="scene-root theme-dark">
+            style="-fx-background-color:#020617;">
 
+    <!-- TOP BAR -->
     <top>
-        <HBox spacing="12" styleClass="topbar">
-            <padding><Insets top="16" right="24" bottom="16" left="24"/></padding>
-            <Text text="Library" styleClass="title-lg"/>
+        <HBox spacing="12" style="-fx-background-color:#0f172a;">
+            <padding>
+                <Insets top="16" right="24" bottom="16" left="24"/>
+            </padding>
+            <Text text="Library Dashboard" style="-fx-fill:white; -fx-font-size:20; -fx-font-weight:bold;"/>
             <Pane HBox.hgrow="ALWAYS"/>
-            <Label fx:id="userLabel" textFill="white"/>
-            <Button text="Logout" onAction="#onLogout" styleClass="btn-pill"/>
+            <Label fx:id="userLabel" style="-fx-text-fill:#e5e7eb;"/>
+            <Button text="Logout" onAction="#onLogout"
+                    style="-fx-background-color:#ef4444; -fx-text-fill:white; -fx-background-radius:999;"/>
         </HBox>
     </top>
 
     <center>
-        <VBox spacing="12">
-            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+        <VBox spacing="16">
+            <padding>
+                <Insets top="16" right="16" bottom="16" left="16"/>
+            </padding>
 
-            <HBox spacing="8">
-                <TextField fx:id="searchField" promptText="Search title / author / ISBN" HBox.hgrow="ALWAYS"/>
-                <Button text="Search" onAction="#onSearch" styleClass="btn-chip"/>
-                <Button text="Reset" onAction="#onReset" styleClass="btn-chip"/>
+            <!-- STATS ROW -->
+            <HBox spacing="12">
+                <VBox spacing="4" style="-fx-background-color:#111827; -fx-background-radius:8; -fx-padding:12;">
+                    <Label text="Active Loans" style="-fx-text-fill:#9ca3af; -fx-font-size:11;"/>
+                    <Label fx:id="lblActiveLoans" text="0"
+                           style="-fx-text-fill:#f9fafb; -fx-font-size:22; -fx-font-weight:bold;"/>
+                </VBox>
+
+                <VBox spacing="4" style="-fx-background-color:#111827; -fx-background-radius:8; -fx-padding:12;">
+                    <Label text="Total Loans" style="-fx-text-fill:#9ca3af; -fx-font-size:11;"/>
+                    <Label fx:id="lblTotalLoans" text="0"
+                           style="-fx-text-fill:#f9fafb; -fx-font-size:22; -fx-font-weight:bold;"/>
+                </VBox>
+
+                <VBox spacing="4" style="-fx-background-color:#111827; -fx-background-radius:8; -fx-padding:12;">
+                    <Label text="Overdue" style="-fx-text-fill:#9ca3af; -fx-font-size:11;"/>
+                    <Label fx:id="lblOverdue" text="0"
+                           style="-fx-text-fill:#f97373; -fx-font-size:22; -fx-font-weight:bold;"/>
+                </VBox>
             </HBox>
 
-            <TableView fx:id="booksTable" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="colTitle" text="Title" prefWidth="260"/>
-                    <TableColumn fx:id="colAuthor" text="Author" prefWidth="200"/>
-                    <TableColumn fx:id="colIsbn" text="ISBN" prefWidth="140"/>
-                    <TableColumn fx:id="colAvail" text="Available" prefWidth="100"/>
-                </columns>
-            </TableView>
+            <!-- MAIN CONTENT: LEFT = Active Loans, RIGHT = Available Books -->
+            <HBox spacing="16">
+                <!-- ACTIVE LOANS -->
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <Label text="My Active Loans"
+                           style="-fx-text-fill:#e5e7eb; -fx-font-size:14; -fx-font-weight:bold;"/>
+                    <TableView fx:id="tblActive" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colAIsbn"     text="ISBN"        prefWidth="130"/>
+                            <TableColumn fx:id="colATitle"    text="Title"       prefWidth="240"/>
+                            <TableColumn fx:id="colABorrowed" text="Borrowed At" prefWidth="180"/>
+                            <TableColumn fx:id="colADue"      text="Due Date"    prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                    <Label fx:id="statusActive" style="-fx-text-fill:#93c5fd;"/>
+                </VBox>
 
-            <HBox spacing="8">
-                <Label text="Loan days:" textFill="white"/>
-                <TextField fx:id="loanDaysField" promptText="14" prefWidth="60"/>
-                <Button text="Borrow Selected" onAction="#onBorrow" styleClass="btn-primary"/>
+                <!-- AVAILABLE BOOKS -->
+                <VBox spacing="8" prefWidth="420">
+                    <Label text="Available Books"
+                           style="-fx-text-fill:#e5e7eb; -fx-font-size:14; -fx-font-weight:bold;"/>
+
+                    <HBox spacing="6">
+                        <TextField fx:id="bookSearchField"
+                                   promptText="Search books..."
+                                   HBox.hgrow="ALWAYS"/>
+                        <Button text="Search" onAction="#onSearchBooksUser"
+                                style="-fx-background-radius:999;"/>
+                        <Button text="Reset" onAction="#onResetBooksUser"
+                                style="-fx-background-radius:999;"/>
+                    </HBox>
+
+                    <TableView fx:id="tblBooks" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colBIsbn"   text="ISBN"      prefWidth="120"/>
+                            <TableColumn fx:id="colBTitle"  text="Title"     prefWidth="220"/>
+                            <TableColumn fx:id="colBAuthor" text="Author"    prefWidth="160"/>
+                            <TableColumn fx:id="colBAvail"  text="Available" prefWidth="80"/>
+                        </columns>
+                    </TableView>
+
+                    <HBox spacing="8">
+                        <Button text="Borrow Selected" onAction="#onBorrowSelected"
+                                style="-fx-background-color:#22c55e; -fx-text-fill:white; -fx-background-radius:6;"/>
+                        <Label fx:id="statusBooks" style="-fx-text-fill:#93c5fd;"/>
+                    </HBox>
+                </VBox>
             </HBox>
-
-            <Label fx:id="statusLabel" textFill="white"/>
         </VBox>
     </center>
 </BorderPane>

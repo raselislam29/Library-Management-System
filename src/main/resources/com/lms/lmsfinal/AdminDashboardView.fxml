@@ -24,57 +24,57 @@
         <HBox spacing="16">
             <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
 
-            <!-- BOOKS -->
+            <!-- BOOKS (read-only preview + manage button) -->
             <VBox spacing="10" HBox.hgrow="ALWAYS">
                 <Label text="Books" styleClass="title-md"/>
+
                 <HBox spacing="8">
-                    <TextField fx:id="searchField" promptText="Search title / author / ISBN" HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="searchField"
+                               promptText="Search title / author / ISBN"
+                               HBox.hgrow="ALWAYS"/>
                     <Button text="Search" onAction="#onSearchBooks" styleClass="btn-chip"/>
-                    <Button text="Reset" onAction="#onResetBooks" styleClass="btn-chip"/>
+                    <Button text="Reset"  onAction="#onResetBooks" styleClass="btn-chip"/>
                 </HBox>
 
                 <TableView fx:id="booksTable" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colIsbn" text="ISBN" prefWidth="140"/>
-                        <TableColumn fx:id="colTitle" text="Title" prefWidth="260"/>
-                        <TableColumn fx:id="colAuthor" text="Author" prefWidth="200"/>
+                        <TableColumn fx:id="colIsbn"      text="ISBN"      prefWidth="140"/>
+                        <TableColumn fx:id="colTitle"     text="Title"     prefWidth="260"/>
+                        <TableColumn fx:id="colAuthor"    text="Author"    prefWidth="200"/>
                         <TableColumn fx:id="colPublisher" text="Publisher" prefWidth="180"/>
-                        <TableColumn fx:id="colTotal" text="Total" prefWidth="70"/>
-                        <TableColumn fx:id="colAvail" text="Available" prefWidth="90"/>
+                        <TableColumn fx:id="colTotal"     text="Total"     prefWidth="70"/>
+                        <TableColumn fx:id="colAvail"     text="Available" prefWidth="90"/>
                     </columns>
                 </TableView>
 
-                <HBox spacing="8">
-                    <TextField fx:id="isbnField" promptText="ISBN"/>
-                    <TextField fx:id="titleField" promptText="Title" prefWidth="200"/>
-                    <TextField fx:id="authorField" promptText="Author" prefWidth="140"/>
-                    <TextField fx:id="publisherField" promptText="Publisher" prefWidth="140"/>
-                    <TextField fx:id="totalField" promptText="Total"/>
-                    <TextField fx:id="availableField" promptText="Available"/>
-                    <Button text="Add" onAction="#onAddBook" styleClass="btn-primary"/>
-                    <Button text="Update" onAction="#onUpdateBook" styleClass="btn-accent"/>
-                    <Button text="Delete" onAction="#onDeleteBook" styleClass="btn-danger"/>
-                </HBox>
+                <!-- Single button to go to full book management screen -->
+                <Button text="Manage Books"
+                        onAction="#openManageBooks"
+                        styleClass="btn-primary"/>
+
                 <Label fx:id="statusBooks" textFill="white"/>
             </VBox>
 
             <!-- BORROWS -->
             <VBox spacing="10" prefWidth="460">
                 <Label text="Active Borrows" styleClass="title-md"/>
+
                 <TableView fx:id="borrowsTable" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="bColName" text="Student" prefWidth="140"/>
-                        <TableColumn fx:id="bColEmail" text="Email" prefWidth="180"/>
-                        <TableColumn fx:id="bColIsbn" text="ISBN" prefWidth="110"/>
-                        <TableColumn fx:id="bColTitle" text="Title" prefWidth="240"/>
-                        <TableColumn fx:id="bColDue" text="Due" prefWidth="100"/>
-                        <TableColumn fx:id="bColOver" text="Overdue" prefWidth="90"/>
+                        <TableColumn fx:id="bColName"  text="Student" prefWidth="140"/>
+                        <TableColumn fx:id="bColEmail" text="Email"   prefWidth="180"/>
+                        <TableColumn fx:id="bColIsbn"  text="ISBN"    prefWidth="110"/>
+                        <TableColumn fx:id="bColTitle" text="Title"   prefWidth="240"/>
+                        <TableColumn fx:id="bColDue"   text="Due"     prefWidth="100"/>
+                        <TableColumn fx:id="bColOver"  text="Overdue" prefWidth="90"/>
                     </columns>
                 </TableView>
+
                 <HBox spacing="8">
-                    <Button text="Refresh" onAction="#refreshBorrows" styleClass="btn-chip"/>
-                    <Button text="Mark Returned" onAction="#markReturned" styleClass="btn-danger"/>
+                    <Button text="Refresh"       onAction="#refreshBorrows" styleClass="btn-chip"/>
+                    <Button text="Mark Returned" onAction="#markReturned"   styleClass="btn-danger"/>
                 </HBox>
+
                 <Label fx:id="statusBorrows" textFill="white"/>
             </VBox>
 
