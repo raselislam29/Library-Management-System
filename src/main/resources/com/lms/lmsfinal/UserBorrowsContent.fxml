@@ -19,7 +19,6 @@
                                 <TableColumn fx:id="bIsbn" text="ISBN" prefWidth="140"/>
                                 <TableColumn fx:id="bTitle" text="Title" prefWidth="320"/>
                                 <TableColumn fx:id="bDue"   text="Due Date" prefWidth="140"/>
-                                <!-- FIXED: & → &amp; -->
                                 <TableColumn fx:id="bAt"    text="Date &amp; Time" prefWidth="200"/>
                                 <TableColumn fx:id="bAction" text="Action" prefWidth="120"/>
                             </columns>

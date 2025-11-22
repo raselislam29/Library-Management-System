@@ -522,7 +522,7 @@ public class FirebaseService {
     }
 
     // =====================================================================
-    // USER BORROWS (User dashboard table)
+    // USER BORROWS (User dashboard / user tab)
     // =====================================================================
 
     public List<UserBorrow> getBorrowsForUser(String email, Boolean returnedFilter) {
@@ -530,11 +530,12 @@ public class FirebaseService {
         try {
             Query q = db.collection("borrows")
                     .whereEqualTo("user_email", email);
+
             if (returnedFilter != null) {
                 q = q.whereEqualTo("returned", returnedFilter);
             }
-            q = q.orderBy("due_date", Query.Direction.DESCENDING);
 
+            // ⚠️ No orderBy here → avoids composite index requirement
             List<QueryDocumentSnapshot> docs = q.get().get().getDocuments();
             for (QueryDocumentSnapshot d : docs) {
                 String id    = d.getId();

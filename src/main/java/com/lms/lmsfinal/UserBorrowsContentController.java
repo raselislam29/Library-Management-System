@@ -3,7 +3,6 @@ package com.lms.lmsfinal;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -15,103 +14,209 @@ public class UserBorrowsContentController {
 
     @FXML private TabPane tabs;
 
-    @FXML private TableView<UserBorrow> borrowedTable;
-    @FXML private TableColumn<UserBorrow, String> bIsbn, bTitle, bDue, bAt;
-    @FXML private TableColumn<UserBorrow, String> bAction;
     @FXML private TextField searchBorrowed;
+    @FXML private TableView<UserBorrow> borrowedTable;
+    @FXML private TableColumn<UserBorrow, String> bIsbn;
+    @FXML private TableColumn<UserBorrow, String> bTitle;
+    @FXML private TableColumn<UserBorrow, String> bDue;
+    @FXML private TableColumn<UserBorrow, String> bAt;
+    @FXML private TableColumn<UserBorrow, Void>   bAction;
 
-    @FXML private TableView<UserBorrow> returnedTable;
-    @FXML private TableColumn<UserBorrow, String> rIsbn, rTitle, rDue, rAt;
     @FXML private TextField searchReturned;
+    @FXML private TableView<UserBorrow> returnedTable;
+    @FXML private TableColumn<UserBorrow, String> rIsbn;
+    @FXML private TableColumn<UserBorrow, String> rTitle;
+    @FXML private TableColumn<UserBorrow, String> rDue;
+    @FXML private TableColumn<UserBorrow, String> rAt;
 
     private final FirebaseService firebase = new FirebaseService();
 
-    // Backing lists + filtered views
-    private final ObservableList<UserBorrow> borrowedBase  = FXCollections.observableArrayList();
-    private final ObservableList<UserBorrow> returnedBase  = FXCollections.observableArrayList();
-    private final FilteredList<UserBorrow>  borrowed       = new FilteredList<>(borrowedBase, b -> true);
-    private final FilteredList<UserBorrow>  returned       = new FilteredList<>(returnedBase, b -> true);
+    // Master lists
+    private final ObservableList<UserBorrow> allBorrowed  = FXCollections.observableArrayList();
+    private final ObservableList<UserBorrow> allReturned  = FXCollections.observableArrayList();
+
+    // Filtered lists shown in tables
+    private final ObservableList<UserBorrow> borrowedFiltered = FXCollections.observableArrayList();
+    private final ObservableList<UserBorrow> returnedFiltered = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
-        // Borrowed columns
+        // Setup borrowed columns
         bIsbn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
         bTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         bDue.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
         bAt.setCellValueFactory(new PropertyValueFactory<>("borrowedAt"));
 
-        // Return button column
-        bAction.setCellFactory(col -> new TableCell<>() {
-            final Button btn = new Button("Return");
-            { btn.getStyleClass().add("button"); }
-            @Override protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) { setGraphic(null); return; }
-                UserBorrow row = getTableView().getItems().get(getIndex());
-                btn.setOnAction(e -> doReturn(row));
-                setGraphic(btn);
-            }
-        });
-
-        // Returned columns
+        // Setup returned columns
         rIsbn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
         rTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         rDue.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
         rAt.setCellValueFactory(new PropertyValueFactory<>("returnedAt"));
 
-        // Hook data
-        borrowedTable.setItems(borrowed);
-        returnedTable.setItems(returned);
+        // Attach filtered lists to tables
+        borrowedTable.setItems(borrowedFiltered);
+        returnedTable.setItems(returnedFiltered);
 
-        // Search bindings
-        searchBorrowed.textProperty().addListener((obs, o, n) ->
-                borrowed.setPredicate(u -> filter(u, n)));
-        searchReturned.textProperty().addListener((obs, o, n) ->
-                returned.setPredicate(u -> filter(u, n)));
+        // Action column (Return button on active borrows)
+        setupReturnButtonColumn();
 
-        load();
+        // Search filters: update as user types
+        searchBorrowed.textProperty().addListener((obs, oldV, newV) -> applyBorrowedFilter());
+        searchReturned.textProperty().addListener((obs, oldV, newV) -> applyReturnedFilter());
+
+        // Load data initially
+        refreshData();
     }
 
-    private boolean filter(UserBorrow u, String q) {
-        if (q == null || q.isBlank()) return true;
-        q = q.toLowerCase();
-        return (u.getTitle() != null && u.getTitle().toLowerCase().contains(q))
-                || (u.getIsbn()  != null && u.getIsbn().toLowerCase().contains(q));
-    }
+    // --------------------------------------------------
+    // Load borrows for this user
+    // --------------------------------------------------
+    private void refreshData() {
+        final String userEmail = Session.email;
 
-    private void load() {
-        final String email = Session.email;
+        if (userEmail == null || userEmail.isBlank()) {
+            // No logged-in user: clear tables
+            Platform.runLater(() -> {
+                allBorrowed.clear();
+                allReturned.clear();
+                borrowedFiltered.clear();
+                returnedFiltered.clear();
+            });
+            return;
+        }
+
         Task<Void> t = new Task<>() {
-            @Override protected Void call() {
-                List<UserBorrow> act = firebase.getBorrowsForUser(email, false);
-                List<UserBorrow> ret = firebase.getBorrowsForUser(email, true);
-                Platform.runLater(() -> {
-                    borrowedBase.setAll(act);   // ✅ set on backing list
-                    returnedBase.setAll(ret);   // ✅ set on backing list
-                });
-                return null;
-            }
-        };
-        new Thread(t, "user-borrows-load").start();
-    }
-
-    private void doReturn(UserBorrow row) {
-        if (row == null) return;
-        Task<Void> t = new Task<>() {
-            @Override protected Void call() {
+            @Override
+            protected Void call() {
                 try {
-                    firebase.returnBook(row.getIsbn(), Session.email);
-                    // reload after returning
-                    List<UserBorrow> act = firebase.getBorrowsForUser(Session.email, false);
-                    List<UserBorrow> ret = firebase.getBorrowsForUser(Session.email, true);
+                    // Active (not returned)
+                    List<UserBorrow> active = firebase.getBorrowsForUser(userEmail, false);
+                    // Already returned
+                    List<UserBorrow> ret    = firebase.getBorrowsForUser(userEmail, true);
+
                     Platform.runLater(() -> {
-                        borrowedBase.setAll(act);   // ✅ update backing list
-                        returnedBase.setAll(ret);   // ✅ update backing list
+                        allBorrowed.setAll(active);
+                        allReturned.setAll(ret);
+                        applyBorrowedFilter();
+                        applyReturnedFilter();
                     });
-                } catch (Exception e) { e.printStackTrace(); }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Platform.runLater(() ->
+                            showError("Failed to load borrows: " + e.getMessage()));
+                }
                 return null;
             }
         };
-        new Thread(t, "user-borrows-return").start();
+
+        new Thread(t).start();
+    }
+
+    // --------------------------------------------------
+    // Filtering
+    // --------------------------------------------------
+    private void applyBorrowedFilter() {
+        String q = searchBorrowed.getText() == null ? "" : searchBorrowed.getText().trim().toLowerCase();
+        borrowedFiltered.setAll(
+                allBorrowed.filtered(ub ->
+                        q.isEmpty()
+                                || (ub.getTitle() != null && ub.getTitle().toLowerCase().contains(q))
+                                || (ub.getIsbn()  != null && ub.getIsbn().toLowerCase().contains(q))
+                )
+        );
+    }
+
+    private void applyReturnedFilter() {
+        String q = searchReturned.getText() == null ? "" : searchReturned.getText().trim().toLowerCase();
+        returnedFiltered.setAll(
+                allReturned.filtered(ub ->
+                        q.isEmpty()
+                                || (ub.getTitle() != null && ub.getTitle().toLowerCase().contains(q))
+                                || (ub.getIsbn()  != null && ub.getIsbn().toLowerCase().contains(q))
+                )
+        );
+    }
+
+    // --------------------------------------------------
+    // Return button in "Action" column
+    // --------------------------------------------------
+    private void setupReturnButtonColumn() {
+        bAction.setCellFactory(col -> new TableCell<>() {
+            private final Button btn = new Button("Return");
+
+            {
+                btn.setOnAction(evt -> {
+                    UserBorrow ub = getTableView().getItems().get(getIndex());
+                    if (ub == null) return;
+
+                    final String email = Session.email;
+                    if (email == null || email.isBlank()) {
+                        showError("No logged-in user. Please log in again.");
+                        return;
+                    }
+
+                    // Confirm dialog
+                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirm.setTitle("Return Book");
+                    confirm.setHeaderText(null);
+                    confirm.setContentText("Return \"" + ub.getTitle() + "\" ?");
+                    confirm.showAndWait().ifPresent(res -> {
+                        if (res == ButtonType.OK) {
+                            doReturnBook(ub.getIsbn(), email);
+                        }
+                    });
+                });
+                btn.setStyle("-fx-background-color:#22c55e; -fx-text-fill:white; -fx-background-radius:4;");
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btn);
+                }
+            }
+        });
+    }
+
+    private void doReturnBook(String isbn, String userEmail) {
+        Task<Void> t = new Task<>() {
+            @Override
+            protected Void call() {
+                try {
+                    firebase.returnBook(isbn, userEmail);
+                    Platform.runLater(() -> {
+                        showInfo("Book returned.");
+                        refreshData();
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Platform.runLater(() -> showError("Error returning book: " + e.getMessage()));
+                }
+                return null;
+            }
+        };
+        new Thread(t).start();
+    }
+
+    // --------------------------------------------------
+    // Simple alerts
+    // --------------------------------------------------
+    private void showError(String msg) {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setTitle("Error");
+        a.setHeaderText(null);
+        a.setContentText(msg);
+        a.show();
+    }
+
+    private void showInfo(String msg) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setTitle("Info");
+        a.setHeaderText(null);
+        a.setContentText(msg);
+        a.show();
     }
 }
