@@ -1,17 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
 
 <VBox xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
-      spacing="12"
-      style="-fx-background-color:#111827; -fx-background-radius:12;"
-      maxWidth="680">
-    <padding><Insets top="32" right="32" bottom="32" left="32"/></padding>
+      fx:controller="com.lms.lmsfinal.AdminHomeContentController"
+      spacing="16"
+      style="-fx-background-color:#111827; -fx-background-radius:12;">
 
-    <Label text="Welcome to the Admin Dashboard"
-           style="-fx-text-fill:white; -fx-font-size:22; -fx-font-weight:bold;"/>
-    <Label text="Use the left navigation to manage books and users."
-           style="-fx-text-fill:#9ca3af; -fx-font-size:14;"/>
+    <padding>
+        <Insets top="16" right="16" bottom="16" left="16"/>
+    </padding>
+
+    <!-- Header -->
+    <HBox spacing="8">
+        <Text text="Admin Overview"
+              style="-fx-fill:white; -fx-font-size:20; -fx-font-weight:bold;"/>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Label fx:id="statusLabel" style="-fx-text-fill:#9ca3af;"/>
+    </HBox>
+
+    <!-- Stats + Chart -->
+    <HBox spacing="16">
+        <!-- Stats cards -->
+        <VBox spacing="10" prefWidth="260">
+            <VBox spacing="4"
+                  style="-fx-background-color:#1f2937; -fx-background-radius:10; -fx-padding:12;">
+                <Label text="Total Active Loans" style="-fx-text-fill:#9ca3af;"/>
+                <Label fx:id="lblActiveLoans"
+                       style="-fx-text-fill:white; -fx-font-size:22; -fx-font-weight:bold;"/>
+            </VBox>
+
+            <VBox spacing="4"
+                  style="-fx-background-color:#1f2937; -fx-background-radius:10; -fx-padding:12;">
+                <Label text="Overdue Loans" style="-fx-text-fill:#9ca3af;"/>
+                <Label fx:id="lblOverdueLoans"
+                       style="-fx-text-fill:#f97373; -fx-font-size:22; -fx-font-weight:bold;"/>
+            </VBox>
+
+            <VBox spacing="4"
+                  style="-fx-background-color:#1f2937; -fx-background-radius:10; -fx-padding:12;">
+                <Label text="Unique Borrowers" style="-fx-text-fill:#9ca3af;"/>
+                <Label fx:id="lblBorrowers"
+                       style="-fx-text-fill:#a5b4fc; -fx-font-size:22; -fx-font-weight:bold;"/>
+            </VBox>
+        </VBox>
+
+        <!-- Pie Chart -->
+        <VBox spacing="8" HBox.hgrow="ALWAYS">
+            <Label text="Loans Status"
+                   style="-fx-text-fill:white; -fx-font-size:16; -fx-font-weight:bold;"/>
+            <PieChart fx:id="loanPie" prefHeight="260" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </HBox>
+
+    <!-- Preview table of active borrows -->
+    <VBox spacing="8">
+        <HBox>
+            <Label text="Current Active Borrows"
+                   style="-fx-text-fill:white; -fx-font-size:14; -fx-font-weight:bold;"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Button text="Refresh" onAction="#onRefresh"
+                    style="-fx-background-color:#2563eb;
+                           -fx-text-fill:white;
+                           -fx-background-radius:14;
+                           -fx-padding:4 12;"/>
+        </HBox>
+
+        <TableView fx:id="tblPreview" prefHeight="220">
+            <columns>
+                <TableColumn fx:id="colStudent" text="Borrower" prefWidth="160"/>
+                <TableColumn fx:id="colEmail"   text="Email"    prefWidth="220"/>
+                <TableColumn fx:id="colIsbn"    text="ISBN"     prefWidth="120"/>
+                <TableColumn fx:id="colTitle"   text="Title"    prefWidth="260"/>
+                <TableColumn fx:id="colDue"     text="Due Date" prefWidth="120"/>
+                <TableColumn fx:id="colOver"    text="Overdue"  prefWidth="90"/>
+            </columns>
+        </TableView>
+    </VBox>
+
 </VBox>

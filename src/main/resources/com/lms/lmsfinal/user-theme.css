@@ -1,0 +1,297 @@
+/* ============================
+   BASE THEME CONTAINERS
+   ============================ */
+
+/* Attach both .scene-root and theme class to your root BorderPane:
+   styleClass="scene-root theme-dark" (User & Admin shells)
+*/
+
+/* ----- DARK THEME ROOT ----- */
+.scene-root.theme-dark {
+    -fx-background-color: #020617; /* whole window */
+    -fx-text-fill: #e5e7eb;
+}
+
+/* ----- LIGHT THEME ROOT ----- */
+.scene-root.theme-light {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #111827;
+}
+
+/* Make all labels/buttons inherit */
+.theme-dark .label {
+    -fx-text-fill: #e5e7eb;
+}
+
+.theme-light .label {
+    -fx-text-fill: #111827;
+}
+
+/* ============================
+   TOP BAR
+   ============================ */
+
+.theme-dark .bar {
+    -fx-background-color: #111827;
+}
+
+.theme-light .bar {
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.1), 8, 0, 0, 2);
+}
+
+/* Clock & welcome text */
+.theme-dark .bar .label {
+    -fx-text-fill: #e5e7eb;
+}
+
+.theme-light .bar .label {
+    -fx-text-fill: #111827;
+}
+
+/* Top bar <Text> (e.g. "User", "Admin") */
+.theme-dark .bar Text {
+    -fx-fill: #ffffff;
+}
+
+.theme-light .bar Text {
+    -fx-fill: #111827;
+}
+
+/* ============================
+   LEFT NAV / SURFACE CARDS
+   ============================ */
+
+/* Side nav background */
+.theme-dark .nav-pane {
+    -fx-background-color: #020617;
+}
+
+.theme-light .nav-pane {
+    -fx-background-color: #e5e7eb;
+}
+
+/* Generic “card” / content surfaces */
+.theme-dark .surface {
+    -fx-background-color: #111827;
+    -fx-background-radius: 12;
+    -fx-padding: 12;
+}
+
+.theme-light .surface {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-padding: 12;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.08), 10, 0, 0, 3);
+}
+
+/* For your main content host StackPane if you use styleClass="surface" */
+.theme-dark .scene-root .content-host {
+    -fx-background-color: #111827;
+}
+
+.theme-light .scene-root .content-host {
+    -fx-background-color: #f9fafb;
+}
+
+/* ============================
+   BUTTONS
+   ============================ */
+
+/* Base button reset */
+.button {
+    -fx-background-radius: 999;
+    -fx-padding: 6 14;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+}
+
+/* Top bar "ghost" button (e.g. Settings) */
+.theme-dark .button.ghost {
+    -fx-background-color: transparent;
+    -fx-border-color: #4b5563;
+    -fx-border-radius: 999;
+    -fx-text-fill: #e5e7eb;
+}
+
+.theme-light .button.ghost {
+    -fx-background-color: transparent;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 999;
+    -fx-text-fill: #111827;
+}
+
+.button.ghost:hover {
+    -fx-background-color: rgba(148,163,184,0.15);
+}
+
+/* Logout / destructive */
+.theme-dark .button.danger {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+    -fx-background-radius: 999;
+}
+
+.theme-light .button.danger {
+    -fx-background-color: #dc2626;
+    -fx-text-fill: white;
+    -fx-background-radius: 999;
+}
+
+.button.danger:hover {
+    -fx-background-color: #b91c1c;
+}
+
+/* Primary action (if you use styleClass="primary") */
+.theme-dark .button.primary {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+}
+
+.theme-light .button.primary {
+    -fx-background-color: #2563eb;
+    -fx-text-fill: white;
+}
+
+/* Secondary */
+.theme-dark .button.secondary {
+    -fx-background-color: #1f2937;
+    -fx-text-fill: #e5e7eb;
+}
+
+.theme-light .button.secondary {
+    -fx-background-color: #e5e7eb;
+    -fx-text-fill: #111827;
+}
+
+/* Side nav icon buttons: .button.nav */
+.theme-dark .button.nav {
+    -fx-background-color: #020617;
+    -fx-text-fill: #e5e7eb;
+    -fx-background-radius: 14;
+    -fx-padding: 8 0;
+}
+
+.theme-light .button.nav {
+    -fx-background-color: #e5e7eb;
+    -fx-text-fill: #111827;
+    -fx-background-radius: 14;
+    -fx-padding: 8 0;
+}
+
+.button.nav:hover {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+}
+
+/* ============================
+   TEXTFIELDS / TEXT AREAS
+   ============================ */
+
+.theme-dark .text-field,
+.theme-dark .text-area {
+    -fx-background-color: #020617;
+    -fx-text-fill: #e5e7eb;
+    -fx-background-radius: 6;
+    -fx-border-color: #334155;
+    -fx-border-radius: 6;
+}
+
+.theme-light .text-field,
+.theme-light .text-area {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #111827;
+    -fx-background-radius: 6;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6;
+}
+
+/* ============================
+   TABLES
+   ============================ */
+
+.theme-dark .table-view {
+    -fx-background-color: #020617;
+    -fx-table-cell-border-color: #1f2937;
+    -fx-padding: 4;
+}
+
+.theme-light .table-view {
+    -fx-background-color: #ffffff;
+    -fx-table-cell-border-color: #e5e7eb;
+    -fx-padding: 4;
+}
+
+.theme-dark .table-view .column-header-background {
+    -fx-background-color: #111827;
+}
+
+.theme-light .table-view .column-header-background {
+    -fx-background-color: #f3f4f6;
+}
+
+.theme-dark .table-view .column-header,
+.theme-dark .table-view .column-header .label {
+    -fx-text-fill: #e5e7eb;
+}
+
+.theme-light .table-view .column-header,
+.theme-light .table-view .column-header .label {
+    -fx-text-fill: #111827;
+}
+
+.theme-dark .table-row-cell {
+    -fx-background-color: #020617;
+}
+
+.theme-light .table-row-cell {
+    -fx-background-color: #ffffff;
+}
+
+.table-row-cell:filled:hover {
+    -fx-background-color: rgba(59,130,246,0.15);
+}
+
+/* ============================
+   TABS
+   ============================ */
+
+.theme-dark .tab-pane .tab-header-background {
+    -fx-background-color: #020617;
+}
+
+.theme-light .tab-pane .tab-header-background {
+    -fx-background-color: #e5e7eb;
+}
+
+.theme-dark .tab-pane .tab-label {
+    -fx-text-fill: #e5e7eb;
+}
+
+.theme-light .tab-pane .tab-label {
+    -fx-text-fill: #111827;
+}
+
+/* ============================
+   PIE CHART
+   ============================ */
+
+.theme-dark .chart-legend {
+    -fx-text-fill: #e5e7eb;
+}
+
+.theme-light .chart-legend {
+    -fx-text-fill: #111827;
+}
+
+/* ============================
+   SMALL UTILITY TEXT COLORS
+   ============================ */
+
+.theme-dark .text-muted {
+    -fx-text-fill: #9ca3af;
+}
+
+.theme-light .text-muted {
+    -fx-text-fill: #6b7280;
+}

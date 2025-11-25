@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lms.lmsfinal.AdminBorrowersContentController"
+      spacing="12"
+      style="-fx-background-color:#111827; -fx-background-radius:12;">
+
+    <padding>
+        <Insets top="16" right="16" bottom="16" left="16"/>
+    </padding>
+
+    <Label text="Active Borrowers"
+           style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
+
+    <HBox spacing="8">
+        <TextField fx:id="searchField"
+                   promptText="Search by student, email, title, or ISBN"
+                   HBox.hgrow="ALWAYS"/>
+        <Button text="Refresh" onAction="#onRefresh"/>
+    </HBox>
+
+    <TableView fx:id="table" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colStudent" text="Student" prefWidth="160"/>
+            <TableColumn fx:id="colEmail"   text="Email"   prefWidth="220"/>
+            <TableColumn fx:id="colIsbn"    text="ISBN"    prefWidth="120"/>
+            <TableColumn fx:id="colTitle"   text="Title"   prefWidth="260"/>
+            <TableColumn fx:id="colDue"     text="Due Date" prefWidth="120"/>
+            <TableColumn fx:id="colOver"    text="Overdue" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <Label fx:id="statusLabel" style="-fx-text-fill:#9ca3af;"/>
+</VBox>

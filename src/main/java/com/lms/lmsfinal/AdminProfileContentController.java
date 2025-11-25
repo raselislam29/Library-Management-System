@@ -1,18 +1,16 @@
 package com.lms.lmsfinal;
 
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-public class UserProfileContentController {
+public class AdminProfileContentController {
 
     @FXML private Label lblEmail;
     @FXML private Label lblRole;
@@ -24,50 +22,20 @@ public class UserProfileContentController {
 
     @FXML private Label statusLabel;
 
-    @FXML private ToggleButton toggleTheme;   // 🔹 from FXML
-
     private final FirebaseService firebase = new FirebaseService();
     private final DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
     @FXML
     private void initialize() {
         loadProfile();
-        initThemeToggle();
     }
 
-    // ===================== THEME TOGGLE =====================
-
-    private void initThemeToggle() {
-        ThemeManager tm = ThemeManager.getInstance();
-        boolean isDark = (tm.getCurrentTheme() == ThemeManager.Theme.DARK);
-
-        toggleTheme.setSelected(isDark);
-        toggleTheme.setText(isDark ? "Dark mode" : "Light mode");
-    }
-
-    @FXML
-    private void onToggleTheme() {
-        ThemeManager tm = ThemeManager.getInstance();
-
-        // Get the root of the current Scene and apply theme to it
-        Parent root = toggleTheme.getScene() == null
-                ? null
-                : toggleTheme.getScene().getRoot();
-
-        tm.toggleTheme(root);
-
-        boolean isDark = (tm.getCurrentTheme() == ThemeManager.Theme.DARK);
-        toggleTheme.setSelected(isDark);
-        toggleTheme.setText(isDark ? "Dark mode" : "Light mode");
-
-        statusLabel.setText("Theme changed to " + (isDark ? "dark" : "light") + " mode.");
-    }
-
-    // ===================== PROFILE LOAD =====================
-
+    // --------------------------------------------------
+    // Load profile from Firebase
+    // --------------------------------------------------
     private void loadProfile() {
         String email = (Session.email == null || Session.email.isBlank())
-                ? "user@example.com"
+                ? "admin@example.com"
                 : Session.email;
 
         lblEmail.setText(email);
@@ -75,7 +43,7 @@ public class UserProfileContentController {
         FirebaseService.UserProfile profile = firebase.getUserProfile(email);
 
         if (profile == null) {
-            lblRole.setText("Member");
+            lblRole.setText(Session.role == null ? "ADMIN" : Session.role);
             lblJoined.setText("-");
             firstNameField.setText("");
             lastNameField.setText("");
@@ -84,7 +52,11 @@ public class UserProfileContentController {
             return;
         }
 
-        lblRole.setText(profile.getRole() == null ? "Member" : profile.getRole());
+        String role = profile.getRole();
+        if (role == null || role.isBlank()) {
+            role = (Session.role == null || Session.role.isBlank()) ? "ADMIN" : Session.role;
+        }
+        lblRole.setText(role);
 
         Date joinDate = profile.getJoinDate();
         if (joinDate != null) {
@@ -98,15 +70,16 @@ public class UserProfileContentController {
         lastNameField.setText(nullToEmpty(profile.getLastName()));
         displayNameField.setText(nullToEmpty(profile.getDisplayName()));
 
-        statusLabel.setText("Profile loaded.");
+        statusLabel.setText("Admin profile loaded.");
     }
 
     private String nullToEmpty(String s) {
         return s == null ? "" : s;
     }
 
-    // ===================== SAVE / RESET =====================
-
+    // --------------------------------------------------
+    // Save profile changes
+    // --------------------------------------------------
     @FXML
     private void onSaveProfile() {
         String email = lblEmail.getText();
@@ -127,8 +100,9 @@ public class UserProfileContentController {
                     disp.isBlank() ? null : disp
             );
 
+            // Optionally update Session.displayName if you have it
             statusLabel.setText("Profile updated successfully.");
-            showInfo("Profile updated.", "Your name settings have been saved.");
+            showInfo("Profile updated", "Your admin profile has been saved.");
         } catch (Exception e) {
             e.printStackTrace();
             statusLabel.setText("Error updating profile: " + e.getMessage());
@@ -136,14 +110,18 @@ public class UserProfileContentController {
         }
     }
 
+    // --------------------------------------------------
+    // Reset / reload from server
+    // --------------------------------------------------
     @FXML
     private void onResetProfile() {
         loadProfile();
         statusLabel.setText("Profile reset to saved values.");
     }
 
-    // ===================== PASSWORD RESET =====================
-
+    // --------------------------------------------------
+    // Change password (send reset email)
+    // --------------------------------------------------
     @FXML
     private void onChangePassword() {
         String email = lblEmail.getText();
@@ -164,8 +142,9 @@ public class UserProfileContentController {
         }
     }
 
-    // ===================== ALERT HELPERS =====================
-
+    // --------------------------------------------------
+    // Small helpers for alerts
+    // --------------------------------------------------
     private void showError(String title, String msg) {
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.setTitle(title);

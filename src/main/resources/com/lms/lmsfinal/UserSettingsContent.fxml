@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lms.lmsfinal.UserSettingsContentController"
+      spacing="12" styleClass="surface">
+    <padding>
+        <Insets top="16" right="16" bottom="16" left="16"/>
+    </padding>
+
+    <Label text="User Settings" style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
+
+    <!-- Theme toggle -->
+    <TitledPane text="Appearance" expanded="true">
+        <content>
+            <HBox spacing="10">
+                <Label text="Theme:" style="-fx-text-fill:white;"/>
+                <ToggleButton fx:id="themeToggle"
+                              text="Dark"
+                              onAction="#onToggleTheme"/>
+            </HBox>
+        </content>
+    </TitledPane>
+
+    <!-- You can add profile fields here later (first name, last name, etc.) -->
+
+    <Label fx:id="statusLabel" style="-fx-text-fill:#9ca3af;"/>
+</VBox>

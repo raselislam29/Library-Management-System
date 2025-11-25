@@ -4,11 +4,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.lms.lmsfinal.AdminShellController"
-            prefWidth="1200.0" prefHeight="760.0"
-            style="-fx-background-color:#0f172a;">
+<BorderPane  fx:id="root"
+             xmlns="http://javafx.com/javafx/21"
+             xmlns:fx="http://javafx.com/fxml/1"
+             fx:controller="com.lms.lmsfinal.AdminShellController"
+             prefWidth="1200.0" prefHeight="760.0"
+             styleClass="scene-root">
 
     <!-- Top bar -->
     <top>
@@ -17,8 +18,11 @@
             <Text text="Admin" style="-fx-fill:white; -fx-font-size:20; -fx-font-weight:bold;"/>
             <Pane HBox.hgrow="ALWAYS"/>
             <Label fx:id="welcomeLabel" textFill="#93c5fd"/>
+            <Button text="Settings" onAction="#showSettings"
+                    style="-fx-background-color:#3b82f6; -fx-text-fill:white; -fx-background-radius:18; -fx-padding:6 16;"/>
             <Button text="Logout" onAction="#onLogout"
                     style="-fx-background-color:#ef4444; -fx-text-fill:white; -fx-background-radius:18; -fx-padding:6 16;"/>
+
         </HBox>
     </top>
 
@@ -26,12 +30,20 @@
     <left>
         <VBox spacing="10" style="-fx-background-color:#0b1220;" prefWidth="220">
             <padding><Insets top="16" right="12" bottom="16" left="12"/></padding>
+
             <Button text="Home" onAction="#showHome"
                     style="-fx-background-color:#1f2937; -fx-text-fill:white; -fx-background-radius:10; -fx-padding:10;"/>
+
             <Button text="Manage Books" onAction="#showBooks"
                     style="-fx-background-color:#1f2937; -fx-text-fill:white; -fx-background-radius:10; -fx-padding:10;"/>
+
             <Button text="Manage Users" onAction="#showUsers"
                     style="-fx-background-color:#1f2937; -fx-text-fill:white; -fx-background-radius:10; -fx-padding:10;"/>
+
+            <!-- 🔽 New button: Borrowers / Active Loans -->
+            <Button text="Borrowers" onAction="#showBorrowers"
+                    style="-fx-background-color:#1f2937; -fx-text-fill:white; -fx-background-radius:10; -fx-padding:10;"/>
+
         </VBox>
     </left>
 

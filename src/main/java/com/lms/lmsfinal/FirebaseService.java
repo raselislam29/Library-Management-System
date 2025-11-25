@@ -712,9 +712,9 @@ public class FirebaseService {
 
     public List<AdminBorrow> getActiveBorrows() {
         try {
+            // Remove orderBy to avoid composite index requirement
             List<QueryDocumentSnapshot> docs = db.collection("borrows")
                     .whereEqualTo("returned", false)
-                    .orderBy("due_date", Query.Direction.ASCENDING)
                     .get().get().getDocuments();
 
             List<AdminBorrow> out = new ArrayList<>();
@@ -724,6 +724,7 @@ public class FirebaseService {
                 String sName  = d.getString("student_name");
                 String sEmail = d.getString("student_email");
                 if (sEmail == null || sEmail.isBlank()) {
+                    // fallback to user_email (from simple borrowBook())
                     sEmail = d.getString("user_email");
                 }
 
@@ -742,6 +743,8 @@ public class FirebaseService {
             return List.of();
         }
     }
+
+
 
     // =====================================================================
     // Helper classes for Auth responses & user summaries

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lms.lmsfinal.AdminSettingsContentController"
+      spacing="12" style="-fx-background-color:#111827; -fx-background-radius:12;">
+    <padding>
+        <Insets top="16" right="16" bottom="16" left="16"/>
+    </padding>
+
+    <Label text="Settings"
+           style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
+
+    <Separator/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="Theme" style="-fx-text-fill:#e5e7eb;"/>
+        <ToggleButton fx:id="toggleTheme"
+                      text="Dark mode"
+                      onAction="#onToggleTheme"/>
+    </HBox>
+
+    <Label fx:id="themeStatus"
+           style="-fx-text-fill:#9ca3af;"/>
+
+</VBox>

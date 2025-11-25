@@ -5,11 +5,12 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.control.Tooltip?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21"
+<BorderPane fx:id="root"
+            xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.lms.lmsfinal.UserShellController"
             prefWidth="1200.0" prefHeight="760.0"
-            style="-fx-background-color:#0f172a;">
+            styleClass="scene-root">
 
     <!-- Top bar -->
     <top>
@@ -24,45 +25,37 @@
             <Separator orientation="VERTICAL"/>
             <Label fx:id="welcomeLabel"
                    style="-fx-text-fill:#ffffff; -fx-font-weight:bold;"/>
-            <Button text="Settings" styleClass="button ghost"/>
+            <Button text="Settings" onAction="#showProfile" styleClass="button ghost"/>
             <Button text="Logout" onAction="#onLogout" styleClass="button danger"/>
         </HBox>
     </top>
 
     <!-- Left navigation -->
     <left>
-        <VBox spacing="10" style="-fx-background-color:#0b1220;" prefWidth="72">
+        <VBox spacing="10" styleClass="nav-pane" prefWidth="72">
             <padding>
                 <Insets top="16" bottom="16" left="12" right="12"/>
             </padding>
 
             <Button text="🏠" onAction="#showHome"
                     maxWidth="Infinity" styleClass="button nav">
-                <tooltip>
-                    <Tooltip text="Home"/>
-                </tooltip>
+                <tooltip><Tooltip text="Home"/></tooltip>
             </Button>
 
             <Button text="📚" onAction="#showBrowse"
                     maxWidth="Infinity" styleClass="button nav">
-                <tooltip>
-                    <Tooltip text="Browse Catalog"/>
-                </tooltip>
+                <tooltip><Tooltip text="Browse Catalog"/></tooltip>
             </Button>
 
             <Button text="📝" onAction="#showBorrows"
                     maxWidth="Infinity" styleClass="button nav">
-                <tooltip>
-                    <Tooltip text="My Borrows"/>
-                </tooltip>
+                <tooltip><Tooltip text="My Borrows"/></tooltip>
             </Button>
 
             <!-- NEW PROFILE BUTTON -->
             <Button text="👤" onAction="#showProfile"
                     maxWidth="Infinity" styleClass="button nav">
-                <tooltip>
-                    <Tooltip text="Profile Settings"/>
-                </tooltip>
+                <tooltip><Tooltip text="Profile Settings"/></tooltip>
             </Button>
 
         </VBox>
@@ -71,7 +64,7 @@
     <!-- Center area -->
     <center>
         <StackPane fx:id="contentHost"
-                   style="-fx-background-color:#111827; -fx-background-radius:12;">
+                   styleClass="content-host">
             <padding>
                 <Insets top="16" right="16" bottom="16" left="16"/>
             </padding>
