@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lms.lmsfinal.UserNotificationsContentController"
+      spacing="10"
+      styleClass="surface">
+    <padding>
+        <Insets top="16" right="16" bottom="16" left="16"/>
+    </padding>
+
+    <Label text="Notifications"
+           style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
+
+    <Label text="We’ll show upcoming due dates and overdue books here."
+           wrapText="true"
+           style="-fx-text-fill:#9ca3af;"/>
+
+    <Separator/>
+
+    <ListView fx:id="listView" VBox.vgrow="ALWAYS"/>
+
+    <Label fx:id="statusLabel"
+           style="-fx-text-fill:#a5b4fc; -fx-font-size:11;"
+           wrapText="true"/>
+</VBox>

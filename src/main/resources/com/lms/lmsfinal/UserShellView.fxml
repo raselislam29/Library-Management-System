@@ -25,10 +25,15 @@
             <Separator orientation="VERTICAL"/>
             <Label fx:id="welcomeLabel"
                    style="-fx-text-fill:#ffffff; -fx-font-weight:bold;"/>
+
+            <!-- 🔔 NEW: notifications button -->
+            <Button text="🔔" onAction="#showNotifications" styleClass="button ghost"/>
+
             <Button text="Settings" onAction="#showProfile" styleClass="button ghost"/>
             <Button text="Logout" onAction="#onLogout" styleClass="button danger"/>
         </HBox>
     </top>
+
 
     <!-- Left navigation -->
     <left>

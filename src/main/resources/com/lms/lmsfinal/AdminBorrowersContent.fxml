@@ -6,33 +6,68 @@
 <VBox xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.lms.lmsfinal.AdminBorrowersContentController"
-      spacing="12"
+      spacing="10"
       style="-fx-background-color:#111827; -fx-background-radius:12;">
-
     <padding>
         <Insets top="16" right="16" bottom="16" left="16"/>
     </padding>
 
-    <Label text="Active Borrowers"
+    <Label text="Borrowers &amp; Loans"
            style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
 
-    <HBox spacing="8">
-        <TextField fx:id="searchField"
-                   promptText="Search by student, email, title, or ISBN"
-                   HBox.hgrow="ALWAYS"/>
-        <Button text="Refresh" onAction="#onRefresh"/>
-    </HBox>
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
 
-    <TableView fx:id="table" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="colStudent" text="Student" prefWidth="160"/>
-            <TableColumn fx:id="colEmail"   text="Email"   prefWidth="220"/>
-            <TableColumn fx:id="colIsbn"    text="ISBN"    prefWidth="120"/>
-            <TableColumn fx:id="colTitle"   text="Title"   prefWidth="260"/>
-            <TableColumn fx:id="colDue"     text="Due Date" prefWidth="120"/>
-            <TableColumn fx:id="colOver"    text="Overdue" prefWidth="100"/>
-        </columns>
-    </TableView>
+        <!-- ACTIVE TAB -->
+        <Tab text="Active Borrows">
+            <content>
+                <VBox spacing="8">
+                    <HBox spacing="8">
+                        <Button text="Refresh" onAction="#onRefreshAll"
+                                style="-fx-background-color:#3b82f6; -fx-text-fill:white; -fx-background-radius:6;"/>
+                        <Label fx:id="lblActiveStatus"
+                               style="-fx-text-fill:#9ca3af; -fx-font-size:11;"/>
+                    </HBox>
 
-    <Label fx:id="statusLabel" style="-fx-text-fill:#9ca3af;"/>
+                    <TableView fx:id="tblActive" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colAStudent" text="Student" prefWidth="150"/>
+                            <TableColumn fx:id="colAEmail"   text="Email"   prefWidth="200"/>
+                            <TableColumn fx:id="colAIsbn"    text="ISBN"    prefWidth="120"/>
+                            <TableColumn fx:id="colATitle"   text="Title"   prefWidth="260"/>
+                            <TableColumn fx:id="colADue"     text="Due Date" prefWidth="120"/>
+                            <TableColumn fx:id="colAOver"    text="Overdue"  prefWidth="100"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </content>
+        </Tab>
+
+        <!-- RETURNED TAB -->
+        <Tab text="Returned Borrows">
+            <content>
+                <VBox spacing="8">
+                    <HBox spacing="8">
+                        <Button text="Refresh" onAction="#onRefreshAll"
+                                style="-fx-background-color:#3b82f6; -fx-text-fill:white; -fx-background-radius:6;"/>
+                        <Label fx:id="lblReturnedStatus"
+                               style="-fx-text-fill:#9ca3af; -fx-font-size:11;"/>
+                    </HBox>
+
+                    <TableView fx:id="tblReturned" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colRStudent"    text="Student"    prefWidth="150"/>
+                            <TableColumn fx:id="colREmail"      text="Email"      prefWidth="200"/>
+                            <TableColumn fx:id="colRIsbn"       text="ISBN"       prefWidth="120"/>
+                            <TableColumn fx:id="colRTitle"      text="Title"      prefWidth="260"/>
+                            <TableColumn fx:id="colRDue"        text="Due Date"   prefWidth="120"/>
+                            <TableColumn fx:id="colRReturnedAt" text="Returned At" prefWidth="140"/>
+                            <TableColumn fx:id="colRLate"       text="Late"        prefWidth="100"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </content>
+        </Tab>
+
+    </TabPane>
+
 </VBox>

@@ -679,17 +679,71 @@ public class FirebaseService {
         return out;
     }
 
+
+    public List<AdminBorrow> getActiveBorrowsForUser(String userEmail) {
+        List<AdminBorrow> out = new ArrayList<>();
+        try {
+            List<QueryDocumentSnapshot> docs = db.collection("borrows")
+                    .whereEqualTo("user_email", userEmail)
+                    .whereEqualTo("returned", false)
+                    .get().get().getDocuments();
+
+            for (QueryDocumentSnapshot d : docs) {
+                AdminBorrow ab = new AdminBorrow();
+
+                // For user-owned borrows, we may not have student_name / student_email
+                String sName  = d.getString("student_name");
+                String sEmail = d.getString("student_email");
+                if (sEmail == null || sEmail.isBlank()) {
+                    sEmail = d.getString("user_email");
+                }
+
+                ab.studentName  = (sName == null) ? "" : sName;
+                ab.studentEmail = (sEmail == null) ? "" : sEmail;
+                ab.isbn         = d.getString("isbn");
+                ab.title        = d.getString("title");
+                ab.due_date     = d.getTimestamp("due_date");
+                ab.returned     = Boolean.TRUE.equals(d.getBoolean("returned"));
+
+                out.add(ab);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return out;
+    }
+
+    /**
+     * Low stock books – where availableCopies < threshold
+     */
+    public List<Book> getLowStockBooks(int threshold) {
+        List<Book> out = new ArrayList<>();
+        try {
+            List<QueryDocumentSnapshot> docs = db.collection("books")
+                    .whereLessThan("availableCopies", threshold)
+                    .get().get().getDocuments();
+
+            for (QueryDocumentSnapshot d : docs) {
+                out.add(d.toObject(Book.class));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return out;
+    }
+
     // =====================================================================
-    // ADMIN ACTIVE BORROWS (AdminBorrow POJO)
-    // =====================================================================
+// ADMIN BORROWS (used for both active and returned)
+// =====================================================================
 
     public static class AdminBorrow {
-        private String studentName;
-        private String studentEmail;
-        private String isbn;
-        private String title;
-        private com.google.cloud.Timestamp due_date;
-        private boolean returned;
+        String studentName;
+        String studentEmail;
+        String isbn;
+        String title;
+        com.google.cloud.Timestamp due_date;
+        com.google.cloud.Timestamp returned_at;
+        boolean returned;
 
         public String getStudentName()  { return studentName; }
         public String getStudentEmail() { return studentEmail; }
@@ -708,13 +762,25 @@ public class FirebaseService {
                     .toLocalDate();
             return d.toString();
         }
+
+        public java.util.Date getReturnedAt() {
+            return (returned_at == null) ? null : returned_at.toDate();
+        }
+
+        public String getReturnedAtStr() {
+            if (returned_at == null) return "";
+            java.time.LocalDate d = returned_at.toDate().toInstant()
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate();
+            return d.toString();
+        }
     }
 
     public List<AdminBorrow> getActiveBorrows() {
         try {
-            // Remove orderBy to avoid composite index requirement
             List<QueryDocumentSnapshot> docs = db.collection("borrows")
                     .whereEqualTo("returned", false)
+                    .orderBy("due_date", Query.Direction.ASCENDING)
                     .get().get().getDocuments();
 
             List<AdminBorrow> out = new ArrayList<>();
@@ -724,7 +790,6 @@ public class FirebaseService {
                 String sName  = d.getString("student_name");
                 String sEmail = d.getString("student_email");
                 if (sEmail == null || sEmail.isBlank()) {
-                    // fallback to user_email (from simple borrowBook())
                     sEmail = d.getString("user_email");
                 }
 
@@ -733,6 +798,7 @@ public class FirebaseService {
                 ab.isbn         = d.getString("isbn");
                 ab.title        = d.getString("title");
                 ab.due_date     = d.getTimestamp("due_date");
+                ab.returned_at  = d.getTimestamp("returned_at");
                 ab.returned     = Boolean.TRUE.equals(d.getBoolean("returned"));
 
                 out.add(ab);
@@ -744,6 +810,51 @@ public class FirebaseService {
         }
     }
 
+
+    public List<AdminBorrow> getReturnedBorrows() {
+        try {
+            List<QueryDocumentSnapshot> docs = db.collection("borrows")
+                    .whereEqualTo("returned", true)
+                    .get().get().getDocuments();
+
+            List<AdminBorrow> out = new ArrayList<>();
+            for (QueryDocumentSnapshot d : docs) {
+                AdminBorrow ab = new AdminBorrow();
+
+                String sName  = d.getString("student_name");
+                String sEmail = d.getString("student_email");
+                if (sEmail == null || sEmail.isBlank()) {
+                    sEmail = d.getString("user_email");
+                }
+
+                ab.studentName  = (sName == null) ? "" : sName;
+                ab.studentEmail = (sEmail == null) ? "" : sEmail;
+                ab.isbn         = d.getString("isbn");
+                ab.title        = d.getString("title");
+                ab.due_date     = d.getTimestamp("due_date");
+                ab.returned_at  = d.getTimestamp("returned_at");
+                ab.returned     = Boolean.TRUE.equals(d.getBoolean("returned"));
+
+                out.add(ab);
+            }
+
+            // newest returns first (client-side sort to avoid extra index)
+            out.sort((a, b) -> {
+                java.util.Date da = a.getReturnedAt();
+                java.util.Date db2 = b.getReturnedAt();
+                if (da == null && db2 == null) return 0;
+                if (da == null) return 1;
+                if (db2 == null) return -1;
+                return db2.compareTo(da);
+            });
+
+            return out;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
 
 
     // =====================================================================

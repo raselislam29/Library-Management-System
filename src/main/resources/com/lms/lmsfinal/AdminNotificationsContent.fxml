@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lms.lmsfinal.AdminNotificationsContentController"
+      spacing="10"
+      style="-fx-background-color:#111827; -fx-background-radius:12;">
+    <padding>
+        <Insets top="16" right="16" bottom="16" left="16"/>
+    </padding>
+
+    <Label text="Admin Notifications"
+           style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
+
+    <Label text="Overdue loans and low stock alerts will appear here."
+           wrapText="true"
+           style="-fx-text-fill:#9ca3af;"/>
+
+    <Separator/>
+
+    <TitledPane text="Overdue Loans" expanded="true">
+        <content>
+            <ListView fx:id="overdueList"/>
+        </content>
+    </TitledPane>
+
+    <TitledPane text="Low Stock Books" expanded="true">
+        <content>
+            <ListView fx:id="lowStockList"/>
+        </content>
+    </TitledPane>
+
+    <Label fx:id="statusLabel"
+           style="-fx-text-fill:#a5b4fc; -fx-font-size:11;"
+           wrapText="true"/>
+</VBox>

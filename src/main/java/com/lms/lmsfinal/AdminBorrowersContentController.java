@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -17,88 +16,113 @@ import java.util.List;
 
 public class AdminBorrowersContentController {
 
-    @FXML private TextField searchField;
+    // Active tab
+    @FXML private TableView<FirebaseService.AdminBorrow> tblActive;
+    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colAStudent;
+    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colAEmail;
+    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colAIsbn;
+    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colATitle;
+    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colADue;
+    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colAOver;
+    @FXML private Label lblActiveStatus;
 
-    @FXML private TableView<FirebaseService.AdminBorrow> table;
-    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colStudent;
-    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colEmail;
-    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colIsbn;
-    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colTitle;
-    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colDue;
-    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colOver;
-
-    @FXML private Label statusLabel;
+    // Returned tab
+    @FXML private TableView<FirebaseService.AdminBorrow> tblReturned;
+    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colRStudent;
+    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colREmail;
+    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colRIsbn;
+    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colRTitle;
+    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colRDue;
+    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colRReturnedAt;
+    @FXML private TableColumn<FirebaseService.AdminBorrow, String> colRLate;
+    @FXML private Label lblReturnedStatus;
 
     private final FirebaseService firebase = new FirebaseService();
 
-    // Master list + filtered list
-    private final ObservableList<FirebaseService.AdminBorrow> all     = FXCollections.observableArrayList();
-    private final ObservableList<FirebaseService.AdminBorrow> filtered = FXCollections.observableArrayList();
+    private final ObservableList<FirebaseService.AdminBorrow> activeList   = FXCollections.observableArrayList();
+    private final ObservableList<FirebaseService.AdminBorrow> returnedList = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
-        // Column bindings
-        colStudent.setCellValueFactory(cd ->
-                new SimpleStringProperty(cd.getValue().getStudentName())
-        );
-        colEmail.setCellValueFactory(cd ->
-                new SimpleStringProperty(cd.getValue().getStudentEmail())
-        );
-        colIsbn.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("isbn"));
-        colTitle.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("title"));
+        // ---- Active columns ----
+        colAStudent.setCellValueFactory(c -> new SimpleStringProperty(
+                nullSafe(c.getValue().getStudentName())
+        ));
+        colAEmail.setCellValueFactory(c -> new SimpleStringProperty(
+                nullSafe(c.getValue().getStudentEmail())
+        ));
+        colAIsbn.setCellValueFactory(c -> new SimpleStringProperty(
+                nullSafe(c.getValue().getIsbn())
+        ));
+        colATitle.setCellValueFactory(c -> new SimpleStringProperty(
+                nullSafe(c.getValue().getTitle())
+        ));
+        colADue.setCellValueFactory(c -> new SimpleStringProperty(
+                c.getValue().getDueDateStr()
+        ));
+        colAOver.setCellValueFactory(c -> new SimpleStringProperty(
+                computeOverdueText(c.getValue())
+        ));
 
-        // Use getDueDateStr() for date string
-        colDue.setCellValueFactory(cd ->
-                new SimpleStringProperty(cd.getValue().getDueDateStr())
-        );
+        tblActive.setItems(activeList);
 
-        // Overdue column: "X days" or "-"
-        colOver.setCellValueFactory(cd -> {
-            FirebaseService.AdminBorrow ab = cd.getValue();
-            String text = "-";
-            if (ab.getDueDate() != null) {
-                LocalDate due = ab.getDueDate().toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate();
-                long diff = java.time.temporal.ChronoUnit.DAYS.between(due, LocalDate.now());
-                if (diff > 0) {
-                    text = diff + " days";
-                }
-            }
-            return new SimpleStringProperty(text);
-        });
+        // ---- Returned columns ----
+        colRStudent.setCellValueFactory(c -> new SimpleStringProperty(
+                nullSafe(c.getValue().getStudentName())
+        ));
+        colREmail.setCellValueFactory(c -> new SimpleStringProperty(
+                nullSafe(c.getValue().getStudentEmail())
+        ));
+        colRIsbn.setCellValueFactory(c -> new SimpleStringProperty(
+                nullSafe(c.getValue().getIsbn())
+        ));
+        colRTitle.setCellValueFactory(c -> new SimpleStringProperty(
+                nullSafe(c.getValue().getTitle())
+        ));
+        colRDue.setCellValueFactory(c -> new SimpleStringProperty(
+                c.getValue().getDueDateStr()
+        ));
+        colRReturnedAt.setCellValueFactory(c -> new SimpleStringProperty(
+                c.getValue().getReturnedAtStr()
+        ));
+        colRLate.setCellValueFactory(c -> new SimpleStringProperty(
+                computeLateText(c.getValue())
+        ));
 
-        table.setItems(filtered);
+        tblReturned.setItems(returnedList);
 
-        // Live filtering when typing
-        searchField.textProperty().addListener((obs, oldV, newV) -> applyFilter());
-
-        // Load data initially
+        // load initial data
         refreshData();
     }
 
     @FXML
-    private void onRefresh() {
+    private void onRefreshAll() {
         refreshData();
     }
 
     private void refreshData() {
-        statusLabel.setText("Loading...");
+        lblActiveStatus.setText("Loading...");
+        lblReturnedStatus.setText("Loading...");
         Task<Void> t = new Task<>() {
             @Override
             protected Void call() {
                 try {
-                    List<FirebaseService.AdminBorrow> list = firebase.getActiveBorrows();
+                    List<FirebaseService.AdminBorrow> active   = firebase.getActiveBorrows();
+                    List<FirebaseService.AdminBorrow> returned = firebase.getReturnedBorrows();
 
                     Platform.runLater(() -> {
-                        all.setAll(list);
-                        applyFilter();
-                        statusLabel.setText("Loaded " + list.size() + " active borrows.");
+                        activeList.setAll(active);
+                        returnedList.setAll(returned);
+
+                        lblActiveStatus.setText("Active loans: " + active.size());
+                        lblReturnedStatus.setText("Returned loans: " + returned.size());
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Platform.runLater(() ->
-                            statusLabel.setText("Error loading borrows: " + e.getMessage()));
+                    Platform.runLater(() -> {
+                        lblActiveStatus.setText("Error: " + e.getMessage());
+                        lblReturnedStatus.setText("Error: " + e.getMessage());
+                    });
                 }
                 return null;
             }
@@ -106,16 +130,34 @@ public class AdminBorrowersContentController {
         new Thread(t).start();
     }
 
-    private void applyFilter() {
-        String q = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
-        filtered.setAll(
-                all.filtered(ab ->
-                        q.isEmpty()
-                                || (ab.getStudentName()  != null && ab.getStudentName().toLowerCase().contains(q))
-                                || (ab.getStudentEmail() != null && ab.getStudentEmail().toLowerCase().contains(q))
-                                || (ab.getTitle()        != null && ab.getTitle().toLowerCase().contains(q))
-                                || (ab.getIsbn()         != null && ab.getIsbn().toLowerCase().contains(q))
-                )
-        );
+    private String nullSafe(String s) {
+        return s == null ? "" : s;
+    }
+
+    private String computeOverdueText(FirebaseService.AdminBorrow ab) {
+        if (ab.getDueDate() == null) return "-";
+        LocalDate due = ab.getDueDate().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        long diff = java.time.temporal.ChronoUnit.DAYS.between(due, LocalDate.now());
+        return diff > 0 ? diff + " days" : "-";
+    }
+
+    private String computeLateText(FirebaseService.AdminBorrow ab) {
+        if (ab.getDueDate() == null || ab.getReturnedAt() == null) return "-";
+
+        LocalDate due = ab.getDueDate().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        LocalDate ret = ab.getReturnedAt().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+        long diff = java.time.temporal.ChronoUnit.DAYS.between(due, ret);
+        if (diff > 0) {
+            return diff + " days late";
+        } else {
+            return "On time";
+        }
     }
 }
